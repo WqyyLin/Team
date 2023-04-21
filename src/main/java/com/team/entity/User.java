@@ -16,6 +16,7 @@ public class User implements Serializable {
     private String name;// 名字
     private String email; // 邮箱
     private String password; // 密码，使用md5+盐 加密
+    private String confirmPassword; //确认密码
     private String salt; // 盐
     private String confirmCode; // 确认码
     private LocalDateTime activationTime; // 激活失效时间
