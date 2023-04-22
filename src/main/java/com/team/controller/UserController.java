@@ -24,7 +24,7 @@ public class UserController {
      * 注册账号
      */
     @PostMapping("create")
-    public Map<String, Object> createAccount(@RequestBody Map<String, Object> map){
+    public Map<String, Object> createAccount(@RequestBody User map){
         return userService.createAccount(map);
     }
 

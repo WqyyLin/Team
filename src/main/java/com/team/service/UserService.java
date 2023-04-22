@@ -221,4 +221,25 @@ public class UserService {
         resultMap.put("facility", map);
         return resultMap;
     }
+
+    public Map<String, Object> chargeMoney(Map<String, Object> map, HttpSession session) {
+        Map<String, Object> resultMap = new HashMap<>();
+        User user = (User) session.getAttribute("user");
+        if(user == null){
+            resultMap.put("code", 401);
+            resultMap.put("message", "Please log in first!");
+        }else{
+            Integer money = (Integer) map.get("money");
+            if(money <= 0){
+                resultMap.put("code", 400);
+                resultMap.put("message", "Incorrect top-up amount!");
+            }else{
+                resultMap.put("code", 200);
+                resultMap.put("message", "Charge successfully");
+                userMapper.updateUserMoney(userMapper.selectUserMoneyByEmail(user.getEmail())+money, user.getEmail());
+            }
+        }
+        return resultMap;
+    }
+
 }

@@ -39,7 +39,7 @@ public class AppUserController {
      * 注册账号
      */
     @PostMapping("create")
-    public Map<String, Object> createAccount(@RequestBody Map<String, Object> map){
+    public @ResponseBody  Map<String, Object> createAccount(@RequestBody User map){
         return userService.createAccount(map);
     }
 
@@ -67,42 +67,9 @@ public class AppUserController {
         return userService.activationAccound(confirmCode);
     }
 
-    /**
-     * 设施页面
-     */
-    @GetMapping("facilities")
-    public @ResponseBody Map<String, Object> facilityPage(){
-        Map<String, Object> resultMap = new HashMap<>();
-        List<Map<String, Object>> facilities = facilityMapper.selectAllFacility();
-        resultMap.put("code", 200);
-        resultMap.put("facilities", facilities);
-        return resultMap;
-    }
-
-    @GetMapping("lessons")
-    public @ResponseBody Map<String, Object> lessonPage(){
-        Map<String, Object> resultMap = new HashMap<>();
-        Map<String, Object> facilities = new HashMap<>();
-        List<Map<String, Object>> lessons = projectMapper.selectAllLessons();
-        for(Map<String, Object> lesson: lessons){
-            String facility = (String) lesson.get("facility");
-            if(!facilities.containsKey(facility)){
-                facilities.put(facility, new HashMap<>());
-            }
-            String activity = (String) lesson.get("activity");
-            Map<String, Object> activities = (Map<String, Object>) facilities.get(facility);
-            if (!activities.containsKey(activity)){
-                activities.put(activity, new ArrayList<>());
-            }
-            String weekday = (String) lesson.get("dayOfWeek");
-            String[] dayOfWeek= weekday.split(",");
-            lesson.put("dayOfWeek", dayOfWeek);
-            List<Map<String, Object>> realLessons = (List<Map<String, Object>>) activities.get(activity);
-            realLessons.add(lesson);
-        }
-        resultMap.put("code", 200);
-        resultMap.put("lessons", facilities);
-        return resultMap;
+    @PostMapping("charge")
+    public Map<String, Object> chargeMoney(@RequestBody Map<String, Object> map, HttpSession session){
+        return userService.chargeMoney(map, session);
     }
 
 }

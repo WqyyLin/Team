@@ -14,7 +14,7 @@ public interface UserMapper {
      */
     @Insert("INSERT INTO user ( email, password, salt, activation_time, is_valid, confirm_code, name) " +
             " VALUES ( #{email}, #{password}, #{salt}, #{activationTime}, #{isValid}, #{confirmCode}, #{name})")
-    int insertUser(User user);
+    Integer insertUser(User user);
 
     @Select("SELECT money FROM user WHERE email = #{email} and is_valid = 1")
     Integer selectUserMoneyByEmail(@Param("email") String email);
@@ -41,7 +41,7 @@ public interface UserMapper {
      * 根据确认码查询用户并修改状态值为1
      */
     @Update("UPDATE user SET is_valid = 1 WHERE confirm_code = #{confirmCode}")
-    int updateUserByConfirmCode(@Param("confirmCode") String confirmCode);
+    Integer updateUserByConfirmCode(@Param("confirmCode") String confirmCode);
 
     /**
      * 根据邮箱查询用户
