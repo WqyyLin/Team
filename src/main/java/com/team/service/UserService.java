@@ -60,7 +60,7 @@ public class UserService {
                String activationUrl = "http://localhost:8080/user/activation?confirmCode="+confirmCode;
                mailService.sendMailForActivationAccount(activationUrl, user.getEmail());
                resultMap.put("code", 200);
-               resultMap.put("message", "Register successfully, please go to the mailbox for account activation！");
+               resultMap.put("message", "Register successfully, please go to the mailbox for account activation!");
            } else {
                resultMap.put("code", 400);
                resultMap.put("message", "Registration failed!");

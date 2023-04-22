@@ -100,20 +100,31 @@ public class AppSystemController {
         return resultMap;
     }
 
-    @PostMapping("user/png")
-    public void userHeadPicture(HttpServletRequest request) throws IOException{
-        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-        File file1 = new File("h.png");
-        System.out.println(file1.getAbsolutePath());
-        for (MultipartFile file: files){
-            try{
-                byte [] bytes = file.getBytes();
-                OutputStream out = new FileOutputStream(file1);
-                out.write(bytes);
-            }catch (IOException e) {
-                e.printStackTrace();
+    @PutMapping("profilePhoto")
+    public @ResponseBody Map<String, Object> userHeadPicture(HttpServletRequest request, HttpSession session) throws IOException{
+        Map<String, Object> resultMap = new HashMap<>();
+        User user = (User) session.getAttribute("user");
+        if (user == null){
+            resultMap.put("code", 400);
+            resultMap.put("money", "Please log in first");
+        }else{
+            List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+            File file1 = new File(user.getId()+".png");
+//            System.out.println(file1.getAbsolutePath());
+            for (MultipartFile file: files){
+                try{
+                    byte [] bytes = file.getBytes();
+                    OutputStream out = new FileOutputStream(file1);
+                    out.write(bytes);
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            userMapper.updateUserHeadPhoto(user.getId()+"png", user.getEmail());
+            resultMap.put("code", 200);
+            resultMap.put("money", "Upload successfully!");
         }
+        return resultMap;
     }
 
 }

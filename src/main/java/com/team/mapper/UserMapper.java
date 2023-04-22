@@ -43,6 +43,9 @@ public interface UserMapper {
     @Update("UPDATE user SET is_valid = 1 WHERE confirm_code = #{confirmCode}")
     Integer updateUserByConfirmCode(@Param("confirmCode") String confirmCode);
 
+    @Update("UPDATE user SET headPicture = {headPicture} WHERE email = #{email} AND is_valid = 1")
+    Integer updateUserHeadPhoto(@Param("headPicture") String headPicture, @Param("email") String email);
+
     /**
      * 根据邮箱查询用户
      */
