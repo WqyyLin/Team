@@ -100,17 +100,21 @@ public class AppSystemController {
         return resultMap;
     }
 
-    @PutMapping("profilePhoto")
-    public @ResponseBody Map<String, Object> userHeadPicture(HttpServletRequest request, HttpSession session) throws IOException{
+    @PutMapping("profilePhoto/{email}")
+    public @ResponseBody Map<String, Object> userHeadPicture(HttpServletRequest request, @PathVariable String email) throws IOException{
         Map<String, Object> resultMap = new HashMap<>();
-        User user = (User) session.getAttribute("user");
+        User user = userMapper.selectOneUserByEmail(email);
         if (user == null){
             resultMap.put("code", 400);
-            resultMap.put("money", "Please log in first");
+            resultMap.put("message", "Please log in first");
+            System.out.println(111111);
         }else{
             List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-            File file1 = new File(user.getId()+".png");
-//            System.out.println(file1.getAbsolutePath());
+            if (!new File("../", "picture").exists()){
+                new File("../", "picture").mkdirs();
+            }
+            File file1 = new File("../picture/" + user.getId()+".png");
+            System.out.println(file1.getAbsolutePath());
             for (MultipartFile file: files){
                 try{
                     byte [] bytes = file.getBytes();
@@ -120,9 +124,9 @@ public class AppSystemController {
                     e.printStackTrace();
                 }
             }
-            userMapper.updateUserHeadPhoto(user.getId()+"png", user.getEmail());
+            userMapper.updateUserHeadPhoto("../picture/"+user.getId()+"png", user.getEmail());
             resultMap.put("code", 200);
-            resultMap.put("money", "Upload successfully!");
+            resultMap.put("message", "Upload successfully!");
         }
         return resultMap;
     }

@@ -43,7 +43,7 @@ public interface UserMapper {
     @Update("UPDATE user SET is_valid = 1 WHERE confirm_code = #{confirmCode}")
     Integer updateUserByConfirmCode(@Param("confirmCode") String confirmCode);
 
-    @Update("UPDATE user SET headPicture = {headPicture} WHERE email = #{email} AND is_valid = 1")
+    @Update("UPDATE user SET headPicture = #{headPicture} WHERE email = #{email} AND is_valid = 1")
     Integer updateUserHeadPhoto(@Param("headPicture") String headPicture, @Param("email") String email);
 
     /**
@@ -51,6 +51,9 @@ public interface UserMapper {
      */
     @Select("SELECT id, email, password, salt FROM user WHERE email = #{email} AND is_valid = 1")
     List<User> selectUserByEmail(@Param("email") String email);
+
+    @Select("SELECT id, email, password, salt FROM user WHERE email = #{email} AND is_valid = 1")
+    User selectOneUserByEmail(@Param("email") String email);
 
     /**
      * 查询所有用户

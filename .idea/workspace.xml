@@ -8,7 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/team/appController/AppSystemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/appController/AppSystemController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mapper/UserMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/service/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/team/appController/AppSystemController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/appController/AppSystemController.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,18 +33,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "spring.configuration.checksum": "f6fee22e34c7d055ea7c17169175d0de"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;f6fee22e34c7d055ea7c17169175d0de&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="TeamworkApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="teamwork" />
@@ -64,7 +63,8 @@
       <option name="presentableId" value="Default" />
       <updated>1682166965416</updated>
       <workItem from="1682166968434" duration="245000" />
-      <workItem from="1682167759057" duration="2998000" />
+      <workItem from="1682167759057" duration="3395000" />
+      <workItem from="1682267854764" duration="2916000" />
     </task>
     <servers />
   </component>
