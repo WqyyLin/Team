@@ -139,6 +139,7 @@ public class UserService {
             //登出失败
             resultMap.put("code", 400);
             resultMap.put("message", "Something Failure!");
+            resultMap.put("status", "Logout");
             return resultMap;
         }
     }
