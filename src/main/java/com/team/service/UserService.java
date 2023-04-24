@@ -61,6 +61,7 @@ public class UserService {
                mailService.sendMailForActivationAccount(activationUrl, user.getEmail());
                resultMap.put("code", 200);
                resultMap.put("message", "Register successfully, please go to the mailbox for account activation!");
+               resultMap.put("confirmCode", confirmCode);
            } else {
                resultMap.put("code", 400);
                resultMap.put("message", "Registration failed!");
@@ -127,25 +128,17 @@ public class UserService {
         return resultMap;
     }
 
-    public Map<String, Object> logoutAccount(HttpSession session){
+    public Map<String, Object> logoutAccount(String status){
         Map<String, Object> resultMap = new HashMap<>();
-        String status = (String) session.getAttribute("status");
-        if(status == null){
-            //登出错误
-            resultMap.put("code", 400);
-            resultMap.put("message", "No account login currently!");
-            return resultMap;
-        }
         if (status.equals("login")){
             //登出成功
-            session.invalidate();
             resultMap.put("code", 200);
-            resultMap.put("message", "Successfully log in!");
+            resultMap.put("message", "Successfully log out!");
             return resultMap;
         }else {
             //登出失败
             resultMap.put("code", 400);
-            resultMap.put("message", "Failure!");
+            resultMap.put("message", "Something Failure!");
             return resultMap;
         }
     }

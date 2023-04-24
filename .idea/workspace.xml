@@ -9,7 +9,6 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/team/appController/AppUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/appController/AppUserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/team/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/controller/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/team/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/appController/AppSystemController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/appController/AppSystemController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/team/appController/AppUserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/appController/AppUserController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/team/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/controller/UserController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/team/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/service/UserService.class" afterDir="false" />
@@ -80,7 +79,7 @@
       <workItem from="1682272438931" duration="21000" />
       <workItem from="1682308303141" duration="125000" />
       <workItem from="1682309478613" duration="254000" />
-      <workItem from="1682309824827" duration="2918000" />
+      <workItem from="1682309824827" duration="3399000" />
     </task>
     <servers />
   </component>

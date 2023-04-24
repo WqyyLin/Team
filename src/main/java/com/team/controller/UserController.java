@@ -39,9 +39,9 @@ public class UserController {
     /**
      * 登出账号
      */
-    @PostMapping("logout")
-    public Map<String, Object> logoutAccount(HttpSession session) {
-        return userService.logoutAccount(session);
+    @PostMapping("logout/{status}")
+    public Map<String, Object> logoutAccount(@PathVariable String status) {
+        return userService.logoutAccount(status);
     }
 
     /**
