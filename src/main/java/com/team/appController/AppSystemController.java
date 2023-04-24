@@ -85,9 +85,9 @@ public class AppSystemController {
         return resultMap;
     }
 
-    @GetMapping("wallet")
-    public @ResponseBody Map<String, Object> walletPage(HttpSession session) {
-        User u = (User) session.getAttribute("user");
+    @GetMapping("wallet/{email}")
+    public @ResponseBody Map<String, Object> walletPage(@PathVariable String email) {
+        User u = userMapper.selectOneUserByEmail(email);
         Map<String, Object> resultMap = new HashMap<>();
         if(u == null){
             resultMap.put("code", 400);

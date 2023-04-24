@@ -130,7 +130,7 @@ public class UserService {
         session.setAttribute("status","login");
         resultMap.put("ercode", 201);
         resultMap.put("message", "Login successful!");
-        resultMap.put("user", user);
+        resultMap.put("user", u);
         return resultMap;
     }
 
