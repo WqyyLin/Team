@@ -31,9 +31,9 @@ public class UserController {
     /**
      * 登录账号
      */
-    @PostMapping("login")
-    public Map<String, Object> loginAccount(@RequestBody User user, HttpSession session) {
-        return userService.loginAccount(user, session);
+    @PostMapping("login/{status}")
+    public Map<String, Object> loginAccount(@RequestBody User user, @PathVariable String status) {
+        return userService.loginAccount(user, status);
     }
 
     /**

@@ -46,9 +46,9 @@ public class AppUserController {
     /**
      * 登录账号
      */
-    @PostMapping("login")
-    public Map<String, Object> loginAccount(@RequestBody User user, HttpSession session) {
-        return userService.loginAccount(user, session);
+    @PostMapping("login/{status}")
+    public Map<String, Object> loginAccount(@RequestBody User user, @PathVariable String status) {
+        return userService.loginAccount(user, status);
     }
 
     /**
@@ -67,9 +67,9 @@ public class AppUserController {
         return userService.activationAccound(confirmCode);
     }
 
-    @PostMapping("charge")
-    public Map<String, Object> chargeMoney(@RequestBody Map<String, Object> map, HttpSession session){
-        return userService.chargeMoney(map, session);
+    @PostMapping("charge/{email}")
+    public Map<String, Object> chargeMoney(@RequestBody Map<String, Object> map, @PathVariable String email){
+        return userService.chargeMoney(map, email);
     }
 
 }

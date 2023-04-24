@@ -6,8 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="02e88ea1-ea5b-4dd9-a2d8-5968ce1fd25d" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/appController/AppSystemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/appController/AppSystemController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/appController/AppUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/appController/AppUserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/controller/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/team/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/appController/AppSystemController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/appController/AppSystemController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/appController/AppUserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/appController/AppUserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/service/UserService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,18 +44,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;f6fee22e34c7d055ea7c17169175d0de&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm",
+    "spring.configuration.checksum": "f6fee22e34c7d055ea7c17169175d0de"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="TeamworkApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="teamwork" />
@@ -74,7 +80,7 @@
       <workItem from="1682272438931" duration="21000" />
       <workItem from="1682308303141" duration="125000" />
       <workItem from="1682309478613" duration="254000" />
-      <workItem from="1682309824827" duration="871000" />
+      <workItem from="1682309824827" duration="2918000" />
     </task>
     <servers />
   </component>

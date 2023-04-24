@@ -74,13 +74,9 @@ public class UserService {
 
     /**
      * 登录账号
-     *
-     * @param user
-     * @return
      */
-    public Map<String, Object> loginAccount(User user, HttpSession session) {
+    public Map<String, Object> loginAccount(User user, String status) {
         Map<String, Object> resultMap = new HashMap<>();
-        String status = (String) session.getAttribute("status");
         //判断是否已有用户登录
         if(status != null){
             if (status.equals("login")){
@@ -94,10 +90,10 @@ public class UserService {
             }
         }
         if (user.getEmail().equals(email) && user.getPassword().equals(password)){
-            session.setAttribute("status", "manager");
             resultMap.put("ercode", 200);
             resultMap.put("message", "Administrator login successfully!");
             resultMap.put("user", user);
+            resultMap.put("status", "manager");
             return resultMap;
         }
         // 根据邮箱查询用户
@@ -124,10 +120,7 @@ public class UserService {
             resultMap.put("message", "Wrong user name or password!");
             return resultMap;
         }
-        //将user对象存入session里
-        session.setAttribute("user",u);
-        //将status状态设置为login登录并且存入session
-        session.setAttribute("status","login");
+        resultMap.put("status","login");
         resultMap.put("ercode", 201);
         resultMap.put("message", "Login successful!");
         resultMap.put("user", u);
@@ -222,9 +215,9 @@ public class UserService {
         return resultMap;
     }
 
-    public Map<String, Object> chargeMoney(Map<String, Object> map, HttpSession session) {
+    public Map<String, Object> chargeMoney(Map<String, Object> map, String email) {
         Map<String, Object> resultMap = new HashMap<>();
-        User user = (User) session.getAttribute("user");
+        User user = userMapper.selectOneUserByEmail(email);
         if(user == null){
             resultMap.put("code", 401);
             resultMap.put("message", "Please log in first!");
