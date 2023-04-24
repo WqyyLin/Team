@@ -20,7 +20,6 @@ import java.util.Map;
 @RequestMapping("app/user")
 public class AppUserController {
 
-
     @Resource
     private RentService rentService;
     @Resource

@@ -134,12 +134,12 @@ public class UserService {
             //登出成功
             resultMap.put("code", 200);
             resultMap.put("message", "Successfully log out!");
+            resultMap.put("status", "Logout");
             return resultMap;
         }else {
             //登出失败
             resultMap.put("code", 400);
             resultMap.put("message", "Something Failure!");
-            resultMap.put("status", "Logout");
             return resultMap;
         }
     }
