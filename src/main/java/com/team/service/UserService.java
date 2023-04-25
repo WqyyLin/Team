@@ -131,7 +131,7 @@ public class UserService {
     public Map<String, Object> logoutAccount(String status){
         Map<String, Object> resultMap = new HashMap<>();
         if (status.equals("login")){
-            //登出成功-
+            //登出成功
             resultMap.put("code", 200);
             resultMap.put("message", "Successfully log out!");
             resultMap.put("status", "Logout");
