@@ -3,10 +3,7 @@ package com.team.service;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.team.entity.Activity;
-import com.team.entity.Facility;
-import com.team.entity.Project;
-import com.team.entity.Rent;
+import com.team.entity.*;
 import com.team.mapper.*;
 import com.team.tools.ServiceHelper;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +34,8 @@ public class ManagerService {
     private RentMapper rentMapper;
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private CardMapper cardMapper;
 
     @Resource
     private ServiceHelper serviceHelper;
@@ -571,4 +570,32 @@ public class ManagerService {
         return resultMap;
     }
 
+    public Map<String, Object> addCard(Map<String, Object> map, String status) {
+        Map<String, Object> resultMap = new HashMap<>();
+        if(!status.equals("manager")){
+            resultMap.put("code", 401);
+            resultMap.put("message", "Administrator not logged in!");
+            return resultMap;
+        }
+        String name = (String) map.get("name");
+        Integer type = (Integer) map.get("type");
+        if(cardMapper.selectCardNum(name, type) > 0){
+            resultMap.put("code", 400);
+            resultMap.put("message", "You have already added this card!");
+            return resultMap;
+        }
+        Integer time = (Integer) map.get("time");
+        Integer money = (Integer) map.get("money");
+        Integer discount = (Integer) map.get("discount");
+        Card card = new Card();
+        card.setType(type);
+        card.setName(name);
+        card.setMoney(money);
+        card.setTime(time);
+        card.setDiscount(discount);
+        cardMapper.insertCard(card);
+        resultMap.put("code", 200);
+        resultMap.put("message", "Add Successfully");
+        return resultMap;
+    }
 }

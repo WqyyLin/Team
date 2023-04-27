@@ -34,6 +34,14 @@ public class AppManagerController {
     }
 
     /**
+     * 添加卡片
+     */
+    @PostMapping("card/{status}")
+    public @ResponseBody Map<String, Object> addCard(@RequestBody Map<String, Object> map, @PathVariable String status){
+        return managerService.addCard(map, status);
+    }
+
+    /**
      * 设施管理页面
      */
     @GetMapping("facilities")

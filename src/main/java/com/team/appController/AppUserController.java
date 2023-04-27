@@ -67,8 +67,13 @@ public class AppUserController {
     }
 
     @PostMapping("charge/{email}")
-    public Map<String, Object> chargeMoney(@RequestBody Map<String, Object> map, @PathVariable String email){
+    public @ResponseBody Map<String, Object> chargeMoney(@RequestBody Map<String, Object> map, @PathVariable String email){
         return userService.chargeMoney(map, email);
+    }
+
+    @PostMapping("card/member/{email}")
+    public @ResponseBody Map<String, Object> inMember(@RequestBody Map<String, Object> map, @PathVariable String email){
+        return userService.inMember(map, email);
     }
 
 }

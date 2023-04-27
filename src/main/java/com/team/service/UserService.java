@@ -3,7 +3,9 @@ package com.team.service;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
+import com.team.entity.Card;
 import com.team.entity.User;
+import com.team.mapper.CardMapper;
 import com.team.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ public class UserService {
     private UserMapper userMapper;
     @Resource
     private MailService mailService;
+    @Resource
+    private CardMapper cardMapper;
 
     @Value("${manager.email}")
     private String email;
@@ -229,4 +233,22 @@ public class UserService {
         return resultMap;
     }
 
+    public Map<String, Object> inMember(Map<String, Object> map, String email) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Integer cid = (Integer) map.get("cid");
+        User u = userMapper.selectOneUserByEmail(email);
+        Card card = cardMapper.selectCardByCid(cid);
+        if(cardMapper.selectCardNumOfUser(cid, u.getId()) > 0){
+            LocalDateTime time = cardMapper.selectCardTimeOfUser(cid, u.getId());
+            LocalDateTime endTime = time.plusDays(card.getTime());
+            cardMapper.updateUserCard(cid, u.getId(), endTime);
+            resultMap.put("message", "Successful renewal");
+        }else{
+            LocalDateTime endTime = LocalDateTime.now().withMinute(0).withSecond(0).plusDays(card.getTime()).plusHours(1);
+            cardMapper.insertCardOfUser(cid, u.getId(), endTime);
+            resultMap.put("message", "Successful purchase");
+        }
+        resultMap.put("code", 200);
+        return resultMap;
+    }
 }
