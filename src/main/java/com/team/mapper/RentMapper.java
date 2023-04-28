@@ -63,4 +63,6 @@ public interface RentMapper {
     @Delete("DELETE FROM rent Where facility = #{name}")
     void deleteRentsByName(@Param("name") String name);
 
+    @Select("SELECT count(*) FROM rent WHERE facility=#{facility} AND isLesson=0 AND ((#{startTime} between time and limitTime) or (#{endTime} between time and limitTime)")
+    Integer usedNumberOfFacility(@Param("facility") String facility, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 }

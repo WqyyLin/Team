@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 public class Rent {
 
     private Integer rid;
-    private String facility;
-    private String activity;
+    private Integer pid;
+    private Integer isLesson;
     private String email;
     private LocalDateTime time;
     private LocalDateTime rentTime;

@@ -6,6 +6,8 @@ import cn.hutool.crypto.SecureUtil;
 import com.team.entity.Card;
 import com.team.entity.User;
 import com.team.mapper.CardMapper;
+import com.team.mapper.ProjectMapper;
+import com.team.mapper.RentMapper;
 import com.team.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,10 @@ public class UserService {
     private MailService mailService;
     @Resource
     private CardMapper cardMapper;
+    @Resource
+    private ProjectMapper projectMapper;
+    @Resource
+    private RentMapper rentMapper;
 
     @Value("${manager.email}")
     private String email;
@@ -262,10 +268,25 @@ public class UserService {
 
     //计算某时间段某设施剩余人数
     Integer ResidualNumber(LocalDateTime startTime, LocalDateTime endTime, String facilityName){
-        Integer number = 0;
-        //计算该时段课程人数
         //计算该时段活动人数
-        return number;
+        Integer activityNum = rentMapper.usedNumberOfFacility(facilityName, startTime, endTime);
+        String day = startTime.getDayOfWeek().toString();
+        Integer lessonNum = projectMapper.usedNumberOfFacility(facilityName, startTime, endTime);
+        Integer weekDay = 0;
+        switch (day) {
+            case "MONDAY" -> weekDay = 1;
+            case "TUESDAY" -> weekDay = 2;
+            case "WEDNESDAY" -> weekDay = 3;
+            case "THURSDAY" -> weekDay = 4;
+            case "FRIDAY" -> weekDay = 5;
+            case "SATURDAY" -> weekDay = 6;
+            case "SUNDAY" -> weekDay = 7;
+        }
+        startTime = startTime.withDayOfYear(9999).withMonth(12).withDayOfMonth(31);
+        endTime = endTime.withDayOfYear(9999).withMonth(12).withDayOfMonth(31);
+        Integer weekLessonNum = projectMapper.usedWeekNumberOfFacility(facilityName, startTime, endTime, weekDay);
+        //计算该时段课程人数
+        return activityNum+lessonNum+weekLessonNum;
     }
 
 }
