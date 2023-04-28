@@ -28,4 +28,9 @@ public class DatabaseTask {
         rentService.stopRentRestart();
     }
 
+    @Scheduled(cron = "0 0 * * * ?")
+    private void clearExpiredMember(){
+        rentService.clearExpiredMember();
+    }
+
 }

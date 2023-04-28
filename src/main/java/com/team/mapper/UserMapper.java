@@ -52,7 +52,7 @@ public interface UserMapper {
     @Select("SELECT id, name, email, password, salt FROM user WHERE email = #{email} AND is_valid = 1")
     List<User> selectUserByEmail(@Param("email") String email);
 
-    @Select("SELECT id, name, email, password, salt FROM user WHERE email = #{email} AND is_valid = 1")
+    @Select("SELECT id, name, email, password, money FROM user WHERE email = #{email} AND is_valid = 1")
     User selectOneUserByEmail(@Param("email") String email);
 
     /**
@@ -72,6 +72,9 @@ public interface UserMapper {
 
     @Update("UPDATE user SET money=#{money} WHERE email=#{email} and is_valid=1")
     void updateUserMoney(@Param("money") Integer money, @Param("email") String email);
+
+    @Update("UPDATE user SET money=#{money}, membership=1 WHERE email=#{email} and is_valid=1")
+    void updateUserMember(@Param("money") Integer money, @Param("email") String email);
 
     /**
      * 删除重复用户

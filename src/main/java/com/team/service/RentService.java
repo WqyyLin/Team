@@ -5,10 +5,7 @@ import com.team.entity.Activity;
 import com.team.entity.Facility;
 import com.team.entity.Rent;
 import com.team.entity.User;
-import com.team.mapper.ActicityMapper;
-import com.team.mapper.FacilityMapper;
-import com.team.mapper.RentMapper;
-import com.team.mapper.UserMapper;
+import com.team.mapper.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,6 +25,8 @@ public class RentService {
     private FacilityMapper facilityMapper;
     @Resource
     private ActicityMapper acticityMapper;
+    @Resource
+    private CardMapper cardMapper;
     @Resource
     private RentMapper rentMapper;
 
@@ -121,4 +120,9 @@ public class RentService {
         facilityMapper.restartFacility(timeTarget, timeNow);
     }
 
+    public void clearExpiredMember() {
+        //得到当前时间
+        LocalDateTime timeNow = LocalDateTime.now();
+        cardMapper.deleteExpiredMember(timeNow);
+    }
 }

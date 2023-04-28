@@ -237,18 +237,35 @@ public class UserService {
         Map<String, Object> resultMap = new HashMap<>();
         Integer cid = (Integer) map.get("cid");
         User u = userMapper.selectOneUserByEmail(email);
+        Integer money = u.getMoney();
         Card card = cardMapper.selectCardByCid(cid);
+        if(card.getMoney()>money){
+            resultMap.put("code", 400);
+            resultMap.put("message", "The balance is insufficient, please recharge first!");
+            return resultMap;
+        }
         if(cardMapper.selectCardNumOfUser(cid, u.getId()) > 0){
             LocalDateTime time = cardMapper.selectCardTimeOfUser(cid, u.getId());
             LocalDateTime endTime = time.plusDays(card.getTime());
             cardMapper.updateUserCard(cid, u.getId(), endTime);
+            userMapper.updateUserMember(money-card.getMoney(), email);
             resultMap.put("message", "Successful renewal");
         }else{
             LocalDateTime endTime = LocalDateTime.now().withMinute(0).withSecond(0).plusDays(card.getTime()).plusHours(1);
             cardMapper.insertCardOfUser(cid, u.getId(), endTime);
+            userMapper.updateUserMember(money-card.getMoney(), email);
             resultMap.put("message", "Successful purchase");
         }
         resultMap.put("code", 200);
         return resultMap;
     }
+
+    //计算某时间段某设施剩余人数
+    Integer ResidualNumber(LocalDateTime startTime, LocalDateTime endTime, String facilityName){
+        Integer number = 0;
+        //计算该时段课程人数
+        //计算该时段活动人数
+        return number;
+    }
+
 }

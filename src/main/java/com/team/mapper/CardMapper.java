@@ -2,10 +2,7 @@ package com.team.mapper;
 
 import com.team.entity.Activity;
 import com.team.entity.Card;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
 
@@ -32,4 +29,7 @@ public interface CardMapper {
 
     @Update("UPDATE usercard SET time=#{time} WHERE cid=#{cid} and id=#{id}")
     void updateUserCard(@Param("cid") Integer cid, @Param("id") Integer id, @Param("time") LocalDateTime time);
+
+    @Delete("DELETE FROM usercard WHERE time>#{time}")
+    void deleteExpiredMember(@Param("time") LocalDateTime time);
 }
