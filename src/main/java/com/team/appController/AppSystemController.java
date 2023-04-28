@@ -3,10 +3,7 @@ package com.team.appController;
 import com.team.entity.Activity;
 import com.team.entity.Facility;
 import com.team.entity.User;
-import com.team.mapper.ActicityMapper;
-import com.team.mapper.FacilityMapper;
-import com.team.mapper.ProjectMapper;
-import com.team.mapper.UserMapper;
+import com.team.mapper.*;
 import com.team.service.RentService;
 import com.team.service.UserService;
 import org.apache.logging.log4j.util.Base64Util;
@@ -36,6 +33,8 @@ public class AppSystemController {
     private RentService rentService;
     @Resource
     private FacilityMapper facilityMapper;
+    @Resource
+    private CardMapper cardMapper;
     @Resource
     private ProjectMapper projectMapper;
     @Resource
@@ -128,6 +127,14 @@ public class AppSystemController {
             resultMap.put("code", 200);
             resultMap.put("message", "Upload successfully!");
         }
+        return resultMap;
+    }
+
+    @GetMapping("member")
+    public @ResponseBody Map<String, Object> memberPage(){
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("code", 200);
+        resultMap.put("vip", cardMapper.selectAllMemberCard());
         return resultMap;
     }
 

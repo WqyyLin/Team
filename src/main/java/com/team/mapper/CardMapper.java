@@ -5,6 +5,8 @@ import com.team.entity.Card;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 public interface CardMapper {
     @Insert("INSERT INTO card (type, money, time, discount, name) " +
@@ -14,6 +16,9 @@ public interface CardMapper {
     @Insert("INSERT INTO usercard (cid, id, time) " +
             " VALUES (#{cid}, #{id}, #{time})")
     void insertCardOfUser(@Param("cid") Integer cid, @Param("id") Integer id, @Param("time") LocalDateTime time);
+
+    @Select("SELECT cid, money, discount, name, time From card WHERE type=1")
+    List<Map<String, Object>> selectAllMemberCard();
 
     @Select("SELECT count(name) From card where name=#{name} and type=#{type}")
     Integer selectCardNum(@Param("name") String name, @Param("type") Integer type);

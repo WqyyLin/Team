@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="02e88ea1-ea5b-4dd9-a2d8-5968ce1fd25d" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/appController/AppSystemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/appController/AppSystemController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mapper/CardMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mapper/CardMapper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +78,7 @@
       <workItem from="1682309478613" duration="254000" />
       <workItem from="1682309824827" duration="5031000" />
       <workItem from="1682612768848" duration="4873000" />
-      <workItem from="1682658593270" duration="5143000" />
+      <workItem from="1682658593270" duration="6073000" />
     </task>
     <servers />
   </component>
