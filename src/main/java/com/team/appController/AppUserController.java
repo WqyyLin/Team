@@ -76,9 +76,9 @@ public class AppUserController {
         return userService.inMember(map, email);
     }
 
-//    @PostMapping("book/activity/{email}")
-//    public @ResponseBody Map<String, Object> bookActivity(@RequestBody Map<String, Object> map, @PathVariable String email){
-//        return userService.bookActivity(map, email);
-//    }
+    @PostMapping("book/activity/{email}")
+    public @ResponseBody Map<String, Object> bookActivity(@RequestBody Map<String, Object> map, @PathVariable String email){
+        return userService.bookActivity(map, email);
+    }
 
 }

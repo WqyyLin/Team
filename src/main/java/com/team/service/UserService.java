@@ -4,18 +4,21 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.team.entity.Card;
+import com.team.entity.Project;
+import com.team.entity.Rent;
 import com.team.entity.User;
-import com.team.mapper.CardMapper;
-import com.team.mapper.ProjectMapper;
-import com.team.mapper.RentMapper;
-import com.team.mapper.UserMapper;
+import com.team.mapper.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,8 @@ public class UserService {
     private CardMapper cardMapper;
     @Resource
     private ProjectMapper projectMapper;
+    @Resource
+    private FacilityMapper facilityMapper;
     @Resource
     private RentMapper rentMapper;
 
@@ -267,7 +272,7 @@ public class UserService {
     }
 
     //计算某时间段某设施剩余人数
-    Integer ResidualNumber(LocalDateTime startTime, LocalDateTime endTime, String facilityName){
+    Integer residualNumber(LocalDateTime startTime, LocalDateTime endTime, String facilityName){
         //计算该时段活动人数
         Integer activityNum = rentMapper.usedNumberOfFacility(facilityName, startTime, endTime);
         String day = startTime.getDayOfWeek().toString();
@@ -289,4 +294,64 @@ public class UserService {
         return activityNum+lessonNum+weekLessonNum;
     }
 
+    public Map<String, Object> bookActivity(Map<String, Object> map, String email) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Integer pid = (Integer) map.get("pid");
+        Project project = projectMapper.selectActivityProjectByPid(pid);
+        String facility = project.getFacility();
+        Integer isLesson = project.getIsLesson();
+        //小时单价
+        Integer oneMoney = project.getMoney();
+        //持续时间
+        Integer duration = (Integer) map.get("duration");
+        //购买票数
+        Integer num = (Integer) map.get("num");
+        //总价
+        Integer money = duration*num*oneMoney;
+        //设施容量
+        Integer capacity = facilityMapper.selectCapacity(facility);
+        //设置时区
+        ZoneId zoneId = ZoneId.systemDefault();
+        //项目开始时间
+        LocalDateTime startTime;
+        //项目结束时间
+        LocalDateTime endTime;
+        //获取时间
+        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            startTime = LocalDateTime.ofInstant(formatter.parse((String) map.get("startTime")).toInstant(), zoneId);
+            endTime = startTime.plusHours(duration);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        Integer usedCapacity = residualNumber(startTime, endTime, facility);
+        if (capacity >= (usedCapacity+num)){
+            User user = userMapper.selectOneUserByEmail(email);
+            Integer userMoney = user.getMoney();
+            if(userMoney >= money){
+                userMapper.updateUserMoney(userMoney-money, email);
+                Rent r = new Rent();
+                r.setRentTime(LocalDateTime.now());
+                r.setMoney(money);
+                r.setTime(startTime);
+                r.setIsLesson(isLesson);
+                r.setEmail(email);
+                r.setLimitTime(endTime);
+                r.setNum(num);
+                r.setPid(pid);
+                r.setFacility(facility);
+                rentMapper.insertRent(r);
+                resultMap.put("code", 200);
+                resultMap.put("message", "Successful appointment!");
+            }else{
+                resultMap.put("code", 401);
+                resultMap.put("message", "Balance is insufficient, please recharge it first!");
+            }
+        }else{
+            resultMap.put("code", 400);
+            resultMap.put("message", "The capacity of the facility has been exceeded!");
+        }
+
+        return resultMap;
+    }
 }

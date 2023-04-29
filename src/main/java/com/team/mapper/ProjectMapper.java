@@ -24,6 +24,9 @@ public interface ProjectMapper {
     @Select("SELECT count(name) FROM project where name=#{name} and facility=#{facility} and activity=#{activity}")
     Integer selectIsAvailable(@Param("name") String name, @Param("facility") String facility, @Param("activity")String activity);
 
+    @Select("SELECT * FROM project WHERE pid=#{pid}")
+    Project selectActivityProjectByPid(@Param("pid") Integer pid);
+
     //查找课程
     @Select("SELECT * FROM project where isLesson=1")
     List<Map<String, Object>> selectAllLessons();

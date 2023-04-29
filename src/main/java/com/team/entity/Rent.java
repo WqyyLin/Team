@@ -18,6 +18,8 @@ public class Rent {
     private LocalDateTime time;
     private LocalDateTime rentTime;
     private Integer money;
+    private String facility;
     private LocalDateTime limitTime;
+    private Integer num;
 
 }

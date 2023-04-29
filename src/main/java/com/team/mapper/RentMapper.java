@@ -1,5 +1,6 @@
 package com.team.mapper;
 
+import com.team.entity.Project;
 import com.team.entity.Rent;
 import org.apache.ibatis.annotations.*;
 
@@ -7,6 +8,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RentMapper {
+
+    @Insert("INSERT INTO rent (email, time, money, rentTime, limitTime, pid, isLesson, facility, num" +
+            " VALUES ( #{email}, #{time}, #{money}, #{rentTime}, #{limitTime}, #{pid}, " +
+            "#{isLesson}, #{facility}, #{num})")
+    void insertRent(Rent rent);
 
     @Select("SELECT count(facility) FROM rent where time between #{firstRentTime} and #{LastRentTime}")
     Integer selectTotalUsedFacilityNumber(@Param("firstRentTime") LocalDateTime firstRentTime, @Param("LastRentTime") LocalDateTime LastRentTime);
