@@ -297,7 +297,7 @@ public class UserService {
     public Map<String, Object> bookActivity(Map<String, Object> map, String email) {
         Map<String, Object> resultMap = new HashMap<>();
         Integer pid = (Integer) map.get("pid");
-        Project project = projectMapper.selectActivityProjectByPid(pid);
+        Project project = projectMapper.selectProjectByPid(pid);
         String facility = project.getFacility();
         Integer isLesson = project.getIsLesson();
         //小时单价
@@ -351,7 +351,48 @@ public class UserService {
             resultMap.put("code", 400);
             resultMap.put("message", "The capacity of the facility has been exceeded!");
         }
+        return resultMap;
+    }
 
+    public Map<String, Object> bookLesson(Map<String, Object> map, String email) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Integer pid = (Integer) map.get("pid");
+        Project project = projectMapper.selectProjectByPid(pid);
+        String facility = project.getFacility();
+        LocalDateTime startTime = LocalDateTime.of(LocalDate.now(), project.getStartTime().toLocalTime());
+        LocalDateTime endTime = LocalDateTime.of(LocalDate.now(), project.getEndTime().toLocalTime());
+        Integer isLesson = project.getIsLesson();
+        Integer oneMoney = project.getMoney();
+        Integer num = (Integer) map.get("num");
+        Integer money = num*oneMoney;
+        Integer allCapacity = project.getCapacity();
+        Integer usedCapacity = rentMapper.numOfProject(pid);
+        if(allCapacity > usedCapacity){
+            User user = userMapper.selectOneUserByEmail(email);
+            Integer userMoney = user.getMoney();
+            if(userMoney >= money){
+                userMapper.updateUserMoney(userMoney-money, email);
+                Rent r = new Rent();
+                r.setRentTime(LocalDateTime.now());
+                r.setMoney(money);
+                r.setTime(startTime);
+                r.setIsLesson(isLesson);
+                r.setEmail(email);
+                r.setLimitTime(endTime);
+                r.setNum(num);
+                r.setPid(pid);
+                r.setFacility(facility);
+                rentMapper.insertRent(r);
+                resultMap.put("code", 200);
+                resultMap.put("message", "Successful appointment!");
+            }else{
+                resultMap.put("code", 401);
+                resultMap.put("message", "Balance is insufficient, please recharge it first!");
+            }
+        }else {
+            resultMap.put("code", 400);
+            resultMap.put("message", "The capacity of the lesson has been exceeded!");
+        }
         return resultMap;
     }
 }

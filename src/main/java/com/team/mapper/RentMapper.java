@@ -14,6 +14,9 @@ public interface RentMapper {
             "#{isLesson}, #{facility}, #{num})")
     void insertRent(Rent rent);
 
+    @Select("SELECT sum(num) FROM rent WHERE pid=#{pid}")
+    Integer numOfProject(@Param("pid") Integer pid);
+
     @Select("SELECT count(facility) FROM rent where time between #{firstRentTime} and #{LastRentTime}")
     Integer selectTotalUsedFacilityNumber(@Param("firstRentTime") LocalDateTime firstRentTime, @Param("LastRentTime") LocalDateTime LastRentTime);
 
