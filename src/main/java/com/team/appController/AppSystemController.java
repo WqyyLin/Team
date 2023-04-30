@@ -130,6 +130,14 @@ public class AppSystemController {
         return resultMap;
     }
 
+    @GetMapping("activity/{facility}")
+    public @ResponseBody Map<String, Object> activityPage(@PathVariable String facility){
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("code", 200);
+        resultMap.put("activity", acticityMapper.selectActivitiesByFacility(facility));
+        return resultMap;
+    }
+
     @GetMapping("member")
     public @ResponseBody Map<String, Object> memberPage(){
         Map<String, Object> resultMap = new HashMap<>();

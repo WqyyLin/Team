@@ -81,7 +81,7 @@ public class AppUserController {
         return userService.bookActivity(map, email);
     }
 
-    @PostMapping("book/activity/{email}")
+    @PostMapping("book/lesson/{email}")
     public @ResponseBody Map<String, Object> bookLesson(@RequestBody Map<String, Object> map, @PathVariable String email){
         return userService.bookLesson(map, email);
     }
