@@ -14,5 +14,6 @@ public class Activity {
     private String facility;
     private Integer isLesson;
     private Integer money;
+    private String description;
 
 }
