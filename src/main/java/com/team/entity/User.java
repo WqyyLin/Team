@@ -23,5 +23,6 @@ public class User implements Serializable {
     private LocalDateTime activationTime; // 激活失效时间
     private Byte isValid; //是否可用
     private Integer money;
+    private Integer type;
 
 }

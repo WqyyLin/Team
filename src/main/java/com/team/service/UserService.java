@@ -328,10 +328,19 @@ public class UserService {
         if (capacity >= (usedCapacity+num)){
             User user = userMapper.selectOneUserByEmail(email);
             Integer userMoney = user.getMoney();
+            int discount=10;
+            for (Integer cid: cardMapper.selectCidById(user.getId())){
+                Integer now = cardMapper.getDiscount(cid);
+                if(discount > now){
+                    discount = now;
+                }
+            }
+            money = money*discount/10;
             if(userMoney >= money){
                 userMapper.updateUserMoney(userMoney-money, email);
                 Rent r = new Rent();
-                r.setRentTime(LocalDateTime.now());
+                LocalDateTime now = LocalDateTime.now();
+                r.setRentTime(now);
                 r.setMoney(money);
                 r.setTime(startTime);
                 r.setIsLesson(isLesson);
@@ -340,6 +349,10 @@ public class UserService {
                 r.setNum(num);
                 r.setPid(pid);
                 r.setFacility(facility);
+                String orderNumber = user.getId().toString() + money + pid + num+
+                        now.getYear() + now.getMonth() + now.getDayOfMonth() + now.getHour() + now.getMinute()+
+                        now.getSecond();
+                r.setOrderNumber(orderNumber);
                 rentMapper.insertRent(r);
                 resultMap.put("code", 200);
                 resultMap.put("message", "Successful appointment!");
@@ -370,10 +383,19 @@ public class UserService {
         if(allCapacity > usedCapacity){
             User user = userMapper.selectOneUserByEmail(email);
             Integer userMoney = user.getMoney();
+            int discount=10;
+            for (Integer cid: cardMapper.selectCidById(user.getId())){
+                Integer now = cardMapper.getDiscount(cid);
+                if(discount > now){
+                    discount = now;
+                }
+            }
+            money = money*discount/10;
             if(userMoney >= money){
                 userMapper.updateUserMoney(userMoney-money, email);
                 Rent r = new Rent();
-                r.setRentTime(LocalDateTime.now());
+                LocalDateTime now = LocalDateTime.now();
+                r.setRentTime(now);
                 r.setMoney(money);
                 r.setTime(startTime);
                 r.setIsLesson(isLesson);
@@ -382,6 +404,10 @@ public class UserService {
                 r.setNum(num);
                 r.setPid(pid);
                 r.setFacility(facility);
+                String orderNumber = user.getId().toString() + money + pid + num+
+                        now.getYear() + now.getMonth() + now.getDayOfMonth() + now.getHour() + now.getMinute()+
+                        now.getSecond();
+                r.setOrderNumber(orderNumber);
                 rentMapper.insertRent(r);
                 resultMap.put("code", 200);
                 resultMap.put("message", "Successful appointment!");
@@ -392,6 +418,20 @@ public class UserService {
         }else {
             resultMap.put("code", 400);
             resultMap.put("message", "The capacity of the lesson has been exceeded!");
+        }
+        return resultMap;
+    }
+
+    public Map<String, Object> getOrder(String orderNumber) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Integer rid = rentMapper.getRidByOrder(orderNumber);
+        if (rid == null){
+            resultMap.put("code", 400);
+            resultMap.put("message", "The order does not exist!");
+        }else{
+            rentMapper.deleteRentByRid(rid);
+            resultMap.put("code", 200);
+            resultMap.put("message", "Successfully!");
         }
         return resultMap;
     }

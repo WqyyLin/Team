@@ -6,13 +6,20 @@ import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface RentMapper {
 
-    @Insert("INSERT INTO rent (email, time, money, rentTime, limitTime, pid, isLesson, facility, num" +
-            " VALUES ( #{email}, #{time}, #{money}, #{rentTime}, #{limitTime}, #{pid}, " +
-            "#{isLesson}, #{facility}, #{num})")
+    @Insert("INSERT INTO rent (email, time, money, rentTime, limitTime, pid, isLesson, facility, num, orderNumber" +
+            " VALUES ( #{email}, #{time}, #{money}, #{rentTime}, #{limitTime}, #{pid}," +
+            "#{isLesson}, #{facility}, #{num}, #{orderNumber})")
     void insertRent(Rent rent);
+
+    @Select("SELECT rid, orderNumber FROM team.rent where email=#{email}  order by ABS(timestampdiff(SECOND, limitTime, #{time}))")
+    List<Map<String, Object>> selectOrderByEmail(@Param("time") LocalDateTime time ,@Param("email") String email);
+
+    @Select("SELECT rid FROM rent WHERE orderNumber=#{orderNumber}")
+    Integer getRidByOrder(@Param("orderNumber") String orderNumber);
 
     @Select("SELECT sum(num) FROM rent WHERE pid=#{pid}")
     Integer numOfProject(@Param("pid") Integer pid);

@@ -2,6 +2,7 @@ package com.team.appController;
 
 import com.team.entity.Activity;
 import com.team.entity.Facility;
+import com.team.entity.Rent;
 import com.team.entity.User;
 import com.team.mapper.*;
 import com.team.service.RentService;
@@ -23,6 +24,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -37,6 +39,8 @@ public class AppSystemController {
     private CardMapper cardMapper;
     @Resource
     private ProjectMapper projectMapper;
+    @Resource
+    private  RentMapper rentMapper;
     @Resource
     private ActicityMapper acticityMapper;
 
@@ -143,6 +147,16 @@ public class AppSystemController {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("code", 200);
         resultMap.put("vip", cardMapper.selectAllMemberCard());
+        return resultMap;
+    }
+
+    @GetMapping("code/{email}")
+    public @ResponseBody Map<String, Object> codePage(@PathVariable String email){
+        Map<String, Object> resultMap = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        String orderNumber = (String) rentMapper.selectOrderByEmail(now, email).get(0).get("orderNumber");
+        resultMap.put("code", 200);
+        resultMap.put("order", orderNumber);
         return resultMap;
     }
 

@@ -21,5 +21,6 @@ public class Rent {
     private String facility;
     private LocalDateTime limitTime;
     private Integer num;
+    private String orderNumber;
 
 }

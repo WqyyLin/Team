@@ -7,6 +7,7 @@ import com.team.mapper.ProjectMapper;
 import com.team.mapper.UserMapper;
 import com.team.service.RentService;
 import com.team.service.UserService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -86,4 +87,8 @@ public class AppUserController {
         return userService.bookLesson(map, email);
     }
 
+    @PostMapping("code/{orderNumber}")
+    public @ResponseBody Map<String, Object> getOrder(@PathVariable String orderNumber){
+        return userService.getOrder(orderNumber);
+    }
 }
