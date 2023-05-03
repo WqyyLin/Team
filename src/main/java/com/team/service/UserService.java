@@ -429,7 +429,7 @@ public class UserService {
             resultMap.put("code", 400);
             resultMap.put("message", "The order does not exist!");
         }else{
-            rentMapper.deleteRentByRid(rid);
+            rentMapper.updateBookStatus(orderNumber);
             resultMap.put("code", 200);
             resultMap.put("message", "Successfully!");
         }

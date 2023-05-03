@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -37,7 +38,7 @@ public class ManagerController {
      * 设施管理页面
      */
     @GetMapping("facilities")
-    public @ResponseBody Map<String, Object> facilitiesInformation(){
+    public List<Map<String, Object>> facilitiesInformation(){
         return managerService.facilitiesInformation();
     }
 

@@ -27,7 +27,7 @@ public interface FacilityMapper {
     /**
      * 查找所有设施
      */
-    @Select("SELECT fid, name, capacity as holdpeople, count(name) as groundnumber, title as Ad_title, description as Ad_describtion, startTime as starttime, endTime as endtime FROM facility group by name")
+    @Select("SELECT fid as id, name, capacity, count(name) as number, description, startTime, endTime FROM facility group by name")
     List<Map<String, Object>> selectAllFacility();
 
     /**

@@ -10,12 +10,15 @@ import java.util.Map;
 
 public interface RentMapper {
 
-    @Insert("INSERT INTO rent (email, time, money, rentTime, limitTime, pid, isLesson, facility, num, orderNumber" +
+    @Insert("INSERT INTO rent (email, time, money, rentTime, limitTime, pid, isLesson, facility, num, orderNumber, used" +
             " VALUES ( #{email}, #{time}, #{money}, #{rentTime}, #{limitTime}, #{pid}," +
-            "#{isLesson}, #{facility}, #{num}, #{orderNumber})")
+            "#{isLesson}, #{facility}, #{num}, #{orderNumber}, 0)")
     void insertRent(Rent rent);
 
-    @Select("SELECT rid, orderNumber FROM team.rent where email=#{email}  order by ABS(timestampdiff(SECOND, limitTime, #{time}))")
+    @Update("UPDATE rent SET used=1 WHERE orderNumber=#{orderNumber}")
+    void updateBookStatus(@Param("orderNumber") String orderNumber);
+
+    @Select("SELECT rid, orderNumber FROM team.rent where email=#{email} and used=0 order by ABS(timestampdiff(SECOND, limitTime, #{time}))")
     List<Map<String, Object>> selectOrderByEmail(@Param("time") LocalDateTime time ,@Param("email") String email);
 
     @Select("SELECT rid FROM rent WHERE orderNumber=#{orderNumber}")

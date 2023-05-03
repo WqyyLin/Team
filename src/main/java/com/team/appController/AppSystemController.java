@@ -1,9 +1,6 @@
 package com.team.appController;
 
-import com.team.entity.Activity;
-import com.team.entity.Facility;
-import com.team.entity.Rent;
-import com.team.entity.User;
+import com.team.entity.*;
 import com.team.mapper.*;
 import com.team.service.RentService;
 import com.team.service.UserService;
@@ -157,6 +154,30 @@ public class AppSystemController {
         String orderNumber = (String) rentMapper.selectOrderByEmail(now, email).get(0).get("orderNumber");
         resultMap.put("code", 200);
         resultMap.put("order", orderNumber);
+        return resultMap;
+    }
+
+    @GetMapping("user/book/activity/{aid}")
+    public @ResponseBody Map<String, Object> activityProject(@PathVariable Integer aid){
+        Map<String, Object> resultMap = new HashMap<>();
+        Activity activity = acticityMapper.selectActivityByAid(aid);
+        String facility = activity.getFacility();
+        String activityName = activity.getName();
+        List<Map<String,Object>> projects = projectMapper.selectAllProjectOfOneActivity(facility, activityName);
+        resultMap.put("code", 200);
+        resultMap.put("project", projects);
+        return resultMap;
+    }
+
+    @GetMapping("user/book/lesson/{aid}")
+    public @ResponseBody Map<String, Object> lessonProject(@PathVariable Integer aid){
+        Map<String, Object> resultMap = new HashMap<>();
+        Activity activity = acticityMapper.selectActivityByAid(aid);
+        String facility = activity.getFacility();
+        String activityName = activity.getName();
+        List<Map<String,Object>> projects = projectMapper.selectAllProjectOfOneActivity(facility, activityName);
+        resultMap.put("code", 200);
+        resultMap.put("project", projects);
         return resultMap;
     }
 

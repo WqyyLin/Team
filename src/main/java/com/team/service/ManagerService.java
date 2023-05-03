@@ -89,18 +89,18 @@ public class ManagerService {
     /**
      * 展示所有场馆信息
      */
-    public Map<String, Object> facilitiesInformation(){
+    public List<Map<String, Object>> facilitiesInformation(){
         Map<String, Object> resultMap = new HashMap<>();
         List<Map<String, Object>> facilities = facilityMapper.selectAllFacility();
         for (Map<String, Object> facility: facilities){
             facility.put("activity", acticityMapper.selectActivityName((String) facility.get("name")));
-            Time startTime = (Time) facility.get("starttime");
-            Time endTime = (Time) facility.get("endtime");
-            facility.put("starttime", startTime.toLocalTime().getHour());
-            facility.put("endtime", endTime.toLocalTime().getHour());
+            Time startTime = (Time) facility.get("startTime");
+            Time endTime = (Time) facility.get("endTime");
+            facility.put("startTime", startTime.toLocalTime().getHour());
+            facility.put("endTime", endTime.toLocalTime().getHour());
         }
         resultMap.put("groundName", facilities);
-        return resultMap;
+        return facilities;
     }
 
     /**

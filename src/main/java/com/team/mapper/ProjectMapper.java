@@ -31,6 +31,9 @@ public interface ProjectMapper {
     @Select("SELECT * FROM project where isLesson=1")
     List<Map<String, Object>> selectAllLessons();
 
+    @Select("SELECT * FROM project where facility=#{facility} and activity=#{activity}")
+    List<Map<String, Object>> selectAllProjectOfOneActivity(@Param("facility") String facility, @Param("activity") String activity);
+
     //查找单个设施所有项目
     @Select("SELECT * FROM project where facility=#{facility}")
     List<Map<String, Object>> selectAllProjectOfOneFacility(@Param("facility") String facility);
