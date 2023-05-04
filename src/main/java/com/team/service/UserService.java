@@ -435,4 +435,18 @@ public class UserService {
         }
         return resultMap;
     }
+
+    public Map<String, Object> orderDetail(Integer rid) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Rent r = rentMapper.selectRentByRid(rid);
+        if (r == null){
+            resultMap.put("code", 400);
+            resultMap.put("message", "The order is too old and has been deleted!");
+        }else{
+            mailService.sendMailForOrder(r, r.getEmail());
+            resultMap.put("code", 200);
+            resultMap.put("message", "Register successfully, please go to the mailbox for account activation!");
+        }
+        return resultMap;
+    }
 }

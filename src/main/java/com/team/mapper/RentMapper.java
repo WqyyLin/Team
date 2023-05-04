@@ -15,6 +15,9 @@ public interface RentMapper {
             "#{isLesson}, #{facility}, #{num}, #{orderNumber}, 0)")
     void insertRent(Rent rent);
 
+    @Select("SELECT * From rent WHERE rid=#{rid}")
+    Rent selectRentByRid(@Param("rid") Integer rid);
+
     @Update("UPDATE rent SET used=1 WHERE orderNumber=#{orderNumber}")
     void updateBookStatus(@Param("orderNumber") String orderNumber);
 

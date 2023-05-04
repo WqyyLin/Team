@@ -92,4 +92,9 @@ public class AppUserController {
         return userService.getOrder(orderNumber);
     }
 
+    @PostMapping("order/details/{rid}")
+    public @ResponseBody Map<String, Object> orderDetail(@PathVariable Integer rid){
+        return userService.orderDetail(rid);
+    }
+
 }
