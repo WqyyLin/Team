@@ -55,6 +55,9 @@ public interface UserMapper {
     @Select("SELECT id, name, email, password, money FROM user WHERE email = #{email} AND is_valid = 1")
     User selectOneUserByEmail(@Param("email") String email);
 
+    @Select("SELECT id, name, email, password, money FROM user WHERE email = #{email}")
+    User selectByEmail(@Param("email") String email);
+
     /**
      * 查询所有用户
      */

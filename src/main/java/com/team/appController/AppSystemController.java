@@ -164,6 +164,14 @@ public class AppSystemController {
         return resultMap;
     }
 
+    @GetMapping("order/{email}")
+    public @ResponseBody Map<String, Object> orderPage(@PathVariable String email){
+        Map<String, Object> resultMap = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        resultMap.put("code", 200);
+        resultMap.put("order", rentMapper.selectOrderByEmail(now,email));
+        return resultMap;
+    }
     @GetMapping("user/book/activity/{aid}")
     public @ResponseBody Map<String, Object> activityProject(@PathVariable Integer aid){
         Map<String, Object> resultMap = new HashMap<>();
