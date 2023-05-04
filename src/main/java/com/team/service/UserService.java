@@ -109,45 +109,31 @@ public class UserService {
     public Map<String, Object> loginAccount(User user, String status) {
         Map<String, Object> resultMap = new HashMap<>();
         //判断是否已有用户登录
-        if(status != null){
-            if (status.equals("manager")){
+        if (status != null) {
+            if (status.equals("login")) {
                 resultMap.put("code", 300);
-                resultMap.put("message", "Administrator has logged in!");
+                resultMap.put("message", "User has logged in!");
                 return resultMap;
             }
         }
-        if (user.getEmail().equals(email) && user.getPassword().equals(password)){
+        User u = userMapper.selectOneUserByEmail(user.getEmail());
+        if (u == null) {
+            resultMap.put("code", 400);
+            resultMap.put("message", "The user does not exist or is not activated!");
+            return resultMap;
+        } else {
+            String md5Pwd = SecureUtil.md5(user.getPassword() + u.getSalt());
+            // 密码不一致，返回：用户名或密码错误
+            if (!u.getPassword().equals(md5Pwd)) {
+                resultMap.put("code", 401);
+                resultMap.put("message", "Wrong user name or password!");
+                return resultMap;
+            }
             resultMap.put("code", 200);
             resultMap.put("message", "Administrator login successfully!");
             resultMap.put("user", user);
-            resultMap.put("status", "manager");
+            resultMap.put("status", "login");
             return resultMap;
-        }else{
-            User u = userMapper.selectOneUserByEmail(user.getEmail());
-            if(u == null){
-                resultMap.put("code", 400);
-                resultMap.put("message", "The user does not exist or is not activated!");
-                return resultMap;
-            }else{
-                String md5Pwd = SecureUtil.md5(user.getPassword() + u.getSalt());
-                // 密码不一致，返回：用户名或密码错误
-                if (!u.getPassword().equals(md5Pwd)) {
-                    resultMap.put("code", 401);
-                    resultMap.put("message", "Wrong user name or password!");
-                    return resultMap;
-                }
-                if (u.getType() == 0){
-                    resultMap.put("code", 402);
-                    resultMap.put("message", "No authority!");
-                    return resultMap;
-                }else{
-                    resultMap.put("code", 200);
-                    resultMap.put("message", "Administrator login successfully!");
-                    resultMap.put("user", user);
-                    resultMap.put("status", "manager");
-                    return resultMap;
-                }
-            }
         }
     }
 

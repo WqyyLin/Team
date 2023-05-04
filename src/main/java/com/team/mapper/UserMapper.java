@@ -52,7 +52,7 @@ public interface UserMapper {
     @Select("SELECT id, name, email, password, salt, membership FROM user WHERE email = #{email} AND is_valid = 1")
     List<User> selectUserByEmail(@Param("email") String email);
 
-    @Select("SELECT id, name, email, password, money FROM user WHERE email = #{email} AND is_valid = 1")
+    @Select("SELECT id, name, email, password, money, salt FROM user WHERE email = #{email} AND is_valid = 1")
     User selectOneUserByEmail(@Param("email") String email);
 
     @Select("SELECT id, name, email, password, money FROM user WHERE email = #{email}")

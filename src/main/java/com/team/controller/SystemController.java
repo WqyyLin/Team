@@ -52,17 +52,6 @@ public class SystemController {
         return resultMap;
     }
 
-    /**
-     * 用户注册界面
-     */
-    @GetMapping("user/create")
-    public @ResponseBody Map<String, Object> userCreatePage(){
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("code", 200);
-        resultMap.put("message", "注册页面");
-        return resultMap;
-    }
-
     @PostMapping("user/png")
     public void userHeadPicture(HttpServletRequest request) throws IOException{
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");

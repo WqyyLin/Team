@@ -44,9 +44,6 @@ public class AppUserController {
         return userService.createAccount(map);
     }
 
-    /**
-     * 登录账号
-     */
     @PostMapping("login/{status}")
     public Map<String, Object> loginAccount(@RequestBody User user, @PathVariable String status) {
         return userService.loginAccount(user, status);
