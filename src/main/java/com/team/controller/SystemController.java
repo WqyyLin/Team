@@ -2,9 +2,11 @@ package com.team.controller;
 
 import com.team.entity.Activity;
 import com.team.entity.Facility;
+import com.team.entity.User;
 import com.team.mapper.ActicityMapper;
 import com.team.mapper.FacilityMapper;
 import com.team.service.RentService;
+import com.team.service.UserService;
 import org.apache.logging.log4j.util.Base64Util;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +37,8 @@ public class SystemController {
     private FacilityMapper facilityMapper;
     @Resource
     private ActicityMapper acticityMapper;
+    @Resource
+    private UserService userService;
 
     /**
      * 主页
@@ -94,5 +98,6 @@ public class SystemController {
         Map<String, Object> resultMap = new HashMap<>();
         return resultMap;
     }
+
 
 }

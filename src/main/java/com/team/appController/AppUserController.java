@@ -40,7 +40,7 @@ public class AppUserController {
      * 注册账号
      */
     @PostMapping("create")
-    public @ResponseBody  Map<String, Object> createAccount(@RequestBody User map){
+    public @ResponseBody  Map<String, Object> createAccount(@RequestBody Map<String, Object> map){
         return userService.createAccount(map);
     }
 

@@ -6,6 +6,7 @@ import com.team.entity.User;
 import com.team.mapper.FacilityMapper;
 import com.team.mapper.UserMapper;
 import com.team.service.ManagerService;
+import com.team.service.UserService;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.web.bind.annotation.*;
 
@@ -128,12 +129,10 @@ public class ManagerController {
     }
 
     /**
-     * 管理员登出
+     * 登录账号
      */
-    @PostMapping("logout")
-    public Map<String, Object> managerLogout(HttpSession session){
-        return managerService.managerLogout(session);
+    @PostMapping("login/{status}")
+    public Map<String, Object> loginAccount(@RequestBody User user, @PathVariable String status) {
+        return managerService.loginAccount(user, status);
     }
-
-
 }

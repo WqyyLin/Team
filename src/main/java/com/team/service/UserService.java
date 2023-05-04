@@ -49,25 +49,40 @@ public class UserService {
      * 注册账号
      */
     @Transactional
-    public Map<String, Object> createAccount(User user) {
+    public Map<String, Object> createAccount(Map<String, Object> map) {
+        Map<String, Object> resultMap = new HashMap<>();
+        String userEmail = (String) map.get("email");
+        if (userEmail.equals(email)){
+            resultMap.put("code", 405);
+            resultMap.put("message", "The user has registered!");
+            return resultMap;
+        }
         //根据邮箱查询用户
-       List<User> userList = userMapper.selectUserByEmail(user.getEmail());
-       Map<String, Object> resultMap = new HashMap<>();
+       List<User> userList = userMapper.selectUserByEmail(userEmail);
+       User user = new User();
        if (userList == null || userList.isEmpty()) {
            // 雪花算法生成确认码
            String confirmCode = IdUtil.getSnowflake(1, 1).nextIdStr();
            // 盐
            String salt = RandomUtil.randomString(6);
            // 加密密码: 原始密码 + 盐
-           String md5Pwd = SecureUtil.md5(user.getPassword() + salt);
+           String md5Pwd = SecureUtil.md5((String) map.get("password") + salt);
            // 激活生效时间
            LocalDateTime ldt = LocalDateTime.now().plusDays(1);
            // 初始化账号信息
+           user.setName((String) map.get("name"));
+           user.setEmail(userEmail);
+           user.setPassword((String) map.get("password"));
            user.setSalt(salt);
            user.setPassword(md5Pwd);
            user.setConfirmCode(confirmCode);
            user.setActivationTime(ldt);
            user.setIsValid((byte) 0);
+           if(((String) map.get("key")).equals("123456")){
+                user.setType(1);
+           }else{
+               user.setType(0);
+           }
            //新增账号
            int result = userMapper.insertUser(user);
            if (result > 0) {
@@ -95,68 +110,60 @@ public class UserService {
         Map<String, Object> resultMap = new HashMap<>();
         //判断是否已有用户登录
         if(status != null){
-            if (status.equals("login")){
-                resultMap.put("ercode", 400);
-                resultMap.put("message", "Existing users log in!");
-                return resultMap;
-            }else if (status.equals("manager")){
-                resultMap.put("ercode", 300);
+            if (status.equals("manager")){
+                resultMap.put("code", 300);
                 resultMap.put("message", "Administrator has logged in!");
                 return resultMap;
             }
         }
         if (user.getEmail().equals(email) && user.getPassword().equals(password)){
-            resultMap.put("ercode", 200);
+            resultMap.put("code", 200);
             resultMap.put("message", "Administrator login successfully!");
             resultMap.put("user", user);
             resultMap.put("status", "manager");
             return resultMap;
+        }else{
+            User u = userMapper.selectOneUserByEmail(user.getEmail());
+            if(u == null){
+                resultMap.put("code", 400);
+                resultMap.put("message", "The user does not exist or is not activated!");
+                return resultMap;
+            }else{
+                String md5Pwd = SecureUtil.md5(user.getPassword() + u.getSalt());
+                // 密码不一致，返回：用户名或密码错误
+                if (!u.getPassword().equals(md5Pwd)) {
+                    resultMap.put("code", 401);
+                    resultMap.put("message", "Wrong user name or password!");
+                    return resultMap;
+                }
+                if (u.getType() == 0){
+                    resultMap.put("code", 402);
+                    resultMap.put("message", "No authority!");
+                    return resultMap;
+                }else{
+                    resultMap.put("code", 200);
+                    resultMap.put("message", "Administrator login successfully!");
+                    resultMap.put("user", user);
+                    resultMap.put("status", "manager");
+                    return resultMap;
+                }
+            }
         }
-        // 根据邮箱查询用户
-        List<User> userList = userMapper.selectUserByEmail(user.getEmail());
-        // 查询不到结果，返回：该用户不存在或未激活
-        if (userList == null || userList.isEmpty()) {
-            resultMap.put("ercode", 401);
-            resultMap.put("message", "The user does not exist or is not activated!");
-            return resultMap;
-        }
-        // 查询到多个结果：返回：账号异常，请联系管理员
-        if (userList.size() > 1) {
-            resultMap.put("ercode", 402);
-            resultMap.put("message", "Account is abnormal, please contact the administrator!");
-            return resultMap;
-        }
-        // 查询到一个用户， 进行密码比对
-        User u = userList.get(0);
-        // 用户输入的密码和盐进行加密
-        String md5Pwd = SecureUtil.md5(user.getPassword() + u.getSalt());
-        // 密码不一致，返回：用户名或密码错误
-        if (!u.getPassword().equals(md5Pwd)) {
-            resultMap.put("ercode", 403);
-            resultMap.put("message", "Wrong user name or password!");
-            return resultMap;
-        }
-        resultMap.put("status","login");
-        resultMap.put("ercode", 201);
-        resultMap.put("message", "Login successful!");
-        resultMap.put("user", u);
-        return resultMap;
     }
 
     public Map<String, Object> logoutAccount(String status){
         Map<String, Object> resultMap = new HashMap<>();
-        if (status.equals("login")){
+        if (status.equals("login") || status.equals("manager")){
             //登出成功
             resultMap.put("code", 200);
             resultMap.put("message", "Successfully log out!");
             resultMap.put("status", "Logout");
-            return resultMap;
         }else {
             //登出失败
             resultMap.put("code", 400);
             resultMap.put("message", "Something Failure!");
-            return resultMap;
         }
+        return resultMap;
     }
 
     /**
