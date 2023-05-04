@@ -449,4 +449,22 @@ public class UserService {
         }
         return resultMap;
     }
+
+    public Map<String, Object> deleteOrder(Integer rid) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Rent r = rentMapper.selectRentByRid(rid);
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(r.getTime().plusHours(2))){
+            resultMap.put("code", 400);
+            resultMap.put("message", "It exceeds the refundable time!");
+        }else{
+            Integer money = r.getMoney();
+            User u = userMapper.selectOneUserByEmail(r.getEmail());
+            userMapper.updateUserMoney(u.getMoney()+money, u.getEmail());
+            rentMapper.updateDeleteOrder(r.getRid());
+            resultMap.put("code", 200);
+            resultMap.put("message", "Cancel successfully!");
+        }
+        return resultMap;
+    }
 }

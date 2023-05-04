@@ -10,13 +10,16 @@ import java.util.Map;
 
 public interface RentMapper {
 
-    @Insert("INSERT INTO rent (email, time, money, rentTime, limitTime, pid, isLesson, facility, num, orderNumber, used" +
+    @Insert("INSERT INTO rent (email, time, money, rentTime, limitTime, pid, isLesson, facility, num, orderNumber, used, valid" +
             " VALUES ( #{email}, #{time}, #{money}, #{rentTime}, #{limitTime}, #{pid}," +
-            "#{isLesson}, #{facility}, #{num}, #{orderNumber}, 0)")
+            "#{isLesson}, #{facility}, #{num}, #{orderNumber}, 0, 1)")
     void insertRent(Rent rent);
 
     @Select("SELECT * From rent WHERE rid=#{rid}")
     Rent selectRentByRid(@Param("rid") Integer rid);
+
+    @Update("UPDATE rent SET used=1, valid=0 WHERE rid=#{rid}")
+    void updateDeleteOrder(@Param("rid") Integer rid);
 
     @Update("UPDATE rent SET used=1 WHERE orderNumber=#{orderNumber}")
     void updateBookStatus(@Param("orderNumber") String orderNumber);

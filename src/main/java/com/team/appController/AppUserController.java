@@ -7,6 +7,7 @@ import com.team.mapper.ProjectMapper;
 import com.team.mapper.UserMapper;
 import com.team.service.RentService;
 import com.team.service.UserService;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 
@@ -95,6 +96,11 @@ public class AppUserController {
     @PostMapping("order/details/{rid}")
     public @ResponseBody Map<String, Object> orderDetail(@PathVariable Integer rid){
         return userService.orderDetail(rid);
+    }
+
+    @DeleteMapping("order/{rid}")
+    public @ResponseBody Map<String, Object> deleteOrder(@PathVariable Integer rid){
+        return userService.deleteOrder(rid);
     }
 
 }
