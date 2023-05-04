@@ -52,40 +52,41 @@ public class ManagerService {
     /**
      * 返回管理员页面信息
      */
-    public Map<String, Object> managerPage(HttpSession session) {
+    public Map<String, Object> managerPage(String status) {
         Map<String, Object> resultMap = new HashMap<>();
-        String status = (String) session.getAttribute("status");
         if (status == null) {
             resultMap.put("code", 400);
-            resultMap.put("message", "请先进行登录验证");
+            resultMap.put("message", "Please login first!");
             return resultMap;
-        } else if (status.equals("login")) {
-            resultMap.put("code", 400);
-            resultMap.put("message", "您没有访问权限");
+        }else if(status.equals("manager")){
+            //获取当日时间
+            LocalDateTime time = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+            resultMap.put("code", 200);
+            //新注册人数
+            resultMap.put("newPeople", serviceHelper.oneDayNewPeopleNumber(time.plusDays(1)));
+            //今日预约人数
+            resultMap.put("rentPeople", serviceHelper.oneDayRentPeople(time));
+            //30天营业额
+            List<Double> money = serviceHelper.getMoney(time, 30);
+            resultMap.put("money", money);
+            //30天总营业额
+            double sum = 0;
+            for (Double num : money) {
+                sum += num;
+            }
+            resultMap.put("thirtyMoney", sum);
+            //今日营业额
+            resultMap.put("todayMoney", money.get(29));
+            //七日增长率
+            resultMap.put("increase", serviceHelper.getIncrease(money, 7));
+            //当日满场率
+//            resultMap.put("rate", serviceHelper.todayAttendanceRate(time));
+            return resultMap;
+        }else{
+            resultMap.put("code", 401);
+            resultMap.put("message", "Wrong status!");
             return resultMap;
         }
-        //获取当日时间
-        LocalDateTime time = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-        //新注册人数
-        resultMap.put("newPeople", serviceHelper.oneDayNewPeopleNumber(time.plusDays(1)));
-        //今日预约人数
-        resultMap.put("rentPeople", serviceHelper.oneDayRentPeople(time));
-        //30天营业额
-        List<Double> money = serviceHelper.getMoney(time, 30);
-        resultMap.put("money", money);
-        //30天总营业额
-        double sum = 0;
-        for (Double num : money) {
-            sum += num;
-        }
-        resultMap.put("thirtyMoney", sum);
-        //今日营业额
-        resultMap.put("todayMoney", money.get(29));
-        //七日增长率
-        resultMap.put("increase", serviceHelper.getIncrease(money, 7));
-        //当日满场率
-        resultMap.put("rate", serviceHelper.todayAttendanceRate(time));
-        return resultMap;
     }
 
 

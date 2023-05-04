@@ -85,13 +85,13 @@ public class ServiceHelper {
         }
         return increase;
     }
-
-    //给错了可能，记得找刘瑞杰对应一下
-    /**
-     * 计算当日满场率
-     */
-    public Double todayAttendanceRate(@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime time){
-        return (double)rentMapper.selectTotalUsedFacilityNumber(time, LocalDateTime.of(time.toLocalDate(), LocalTime.MAX))/ facilityMapper.selectFacilityNumber();
-    }
+//
+//    //给错了可能，记得找刘瑞杰对应一下
+//    /**
+//     * 计算当日满场率
+//     */
+//    public Double todayAttendanceRate(@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime time){
+//        return (double)rentMapper.selectTotalUsedFacilityNumber(time, LocalDateTime.of(time.toLocalDate(), LocalTime.MAX))/ facilityMapper.selectFacilityNumber();
+//    }
 
 }

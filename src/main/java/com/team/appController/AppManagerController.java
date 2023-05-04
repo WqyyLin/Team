@@ -29,9 +29,9 @@ public class AppManagerController {
     /**
      * 管理员主页面
      */
-    @GetMapping()
-    public Map<String, Object> managerPage(HttpSession session){
-        return managerService.managerPage(session);
+    @GetMapping("{status}")
+    public Map<String, Object> managerPage(@PathVariable String status){
+        return managerService.managerPage(status);
     }
 
     /**

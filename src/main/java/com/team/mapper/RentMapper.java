@@ -51,7 +51,7 @@ public interface RentMapper {
     @Select("SELECT count(distinct(email)) FROM rent where rentTime between #{time1} AND #{time2}")
     Integer selectRentPeopleNumber(@Param("time1") LocalDateTime time1, @Param("time2") LocalDateTime time2);
 
-    @Select("SELECT sum(money) FROM rent WHERE rentTime between #{firstRentTime} and #{lastRentTime}")
+    @Select("SELECT sum(money) FROM rent WHERE ((used=1 and valid=0) or (used=0 and valid=1)) and (rentTime between #{firstRentTime} and #{lastRentTime}) ")
     Integer selectDayMoney(@Param("firstRentTime") LocalDateTime firstRentTime, @Param("lastRentTime") LocalDateTime lastRentTime);
 
     @Select("SELECT count(*) FROM rent where facility = #{name} and limitTime > #{limitTime}")
