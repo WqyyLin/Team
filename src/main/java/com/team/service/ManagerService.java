@@ -7,9 +7,12 @@ import com.team.entity.*;
 import com.team.mapper.*;
 import com.team.tools.ServiceHelper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.Time;
 import java.text.ParseException;
@@ -96,10 +99,10 @@ public class ManagerService {
             facility.put("activity", acticityMapper.selectActivityName((String) facility.get("name")));
             Time startTime = (Time) facility.get("startTime");
             Time endTime = (Time) facility.get("endTime");
-            facility.put("startTime", startTime.toLocalTime().getHour());
-            facility.put("endTime", endTime.toLocalTime().getHour());
+            facility.put("startTime", startTime);
+            facility.put("endTime", endTime);
         }
-        resultMap.put("groundName", facilities);
+        resultMap.put("facility", facilities);
         return facilities;
     }
 

@@ -38,7 +38,8 @@ public class ManagerController {
      * 设施管理页面
      */
     @GetMapping("facilities")
-    public List<Map<String, Object>> facilitiesInformation(){
+    public List<Map<String, Object>> facilitiesInformation(Map<String, Object> map){
+        System.out.println(map);
         return managerService.facilitiesInformation();
     }
 

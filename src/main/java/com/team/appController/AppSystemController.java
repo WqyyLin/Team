@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -135,7 +136,13 @@ public class AppSystemController {
     public @ResponseBody Map<String, Object> activityPage(@PathVariable String facility){
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("code", 200);
-        resultMap.put("activity", acticityMapper.selectActivitiesByFacility(facility));
+        List<Map<String, Object>> activities = acticityMapper.selectActivitiesByFacility(facility);
+        for (Map<String, Object> activity: activities){
+            String activityName = (String) activity.get("name");
+            List<Map<String,Object>> projects = projectMapper.selectAllProjectOfOneActivity(facility, activityName);
+            activity.put("projects", projects);
+        }
+        resultMap.put("activity", activities);
         return resultMap;
     }
 
