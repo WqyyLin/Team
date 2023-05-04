@@ -61,7 +61,7 @@
     &quot;spring.configuration.checksum&quot;: &quot;f6fee22e34c7d055ea7c17169175d0de&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.TeamworkApplication">
+  <component name="RunManager" selected="Spring Boot.TeamworkApplication">
     <configuration name="TeamworkApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.team.TeamworkApplication" />
       <module name="teamwork" />
@@ -147,7 +147,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.TeamworkApplication" />
         <item itemvalue="JUnit.UserControllerTest" />
         <item itemvalue="JUnit.UserControllerTest.createUser" />
         <item itemvalue="JUnit.UserControllerTest.wrongCreateUser" />
