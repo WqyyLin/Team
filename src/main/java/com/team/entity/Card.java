@@ -18,4 +18,5 @@ public class Card {
     private Integer money;
     private Integer time;
     private Integer discount;
+    private Integer valid;
 }

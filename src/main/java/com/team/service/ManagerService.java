@@ -110,7 +110,7 @@ public class ManagerService {
     /**
      * 添加activity的project
      */
-    public Map<String, Object> addActivityLesson(Map<String, Object> map) {
+    public Map<String, Object> addActivityProject(Map<String, Object> map) {
         Map<String, Object> resultMap = new HashMap<>();
         //获取设施
         String facilityName = (String) map.get("Sitename");
@@ -428,14 +428,13 @@ public class ManagerService {
         //得到当前时间
         LocalDateTime timeNow = LocalDateTime.now();
         //判断该类设施有无有效预约
-        if (rentMapper.selectRentsByNameAndTime(facilityName, timeNow) > 0) {
+        if (serviceHelper.residualNumber(timeNow, LocalDateTime.MAX, facilityName) > 0) {
             resultMap.put("code", 400);
             resultMap.put("message", "The current facility still has user reservations. Reservations for this facility have been suspended");
             // 关闭设施预约
             facilityMapper.stopFacility(facilityName);
         } else {
             //删除所有数据库相关信息
-            rentMapper.deleteRentsByName(facilityName);
             acticityMapper.deleteActivitiesByName(facilityName);
             facilityMapper.deleteFacilitiesByName(facilityName);
             resultMap.put("code", 200);
@@ -583,7 +582,7 @@ public class ManagerService {
         }
         String name = (String) map.get("name");
         Integer type = (Integer) map.get("type");
-        if (cardMapper.selectCardNum(name, type) > 0) {
+        if (cardMapper.selectCardNum(type, name) > 0) {
             resultMap.put("code", 400);
             resultMap.put("message", "You have already added this card!");
             return resultMap;
@@ -646,5 +645,53 @@ public class ManagerService {
                 }
             }
         }
+    }
+
+    public Map<String, Object> deleteCard(Map<String, Object> map) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Integer cid = (Integer) map.get("cid");
+        if (cardMapper.selectUsedCardByCid(LocalDateTime.now(), cid)>0){
+            resultMap.put("code", 400);
+            resultMap.put("message", "It is being used by a user and cannot be deleted!");
+        }
+        cardMapper.deleteCardByCid(cid);
+        cardMapper.deleteRelationshipByCid(cid);
+        resultMap.put("code", 200);
+        resultMap.put("message", "Administrator login successfully!");
+        return resultMap;
+    }
+
+    public Map<String, Object> changeCard(Map<String, Object> map) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Card card = cardMapper.selectCardByCid((Integer) map.get("cid"));
+        String name = (String) map.get("name");
+        Integer time = (Integer) map.get("time");
+        Integer money = (Integer) map.get("money");
+        Integer discount = (Integer) map.get("discount");
+        card.setTime(time);
+        card.setName(name);
+        card.setMoney(money);
+        card.setDiscount(discount);
+        card.setDiscount(discount);
+        cardMapper.updateCardInfo(card);
+        resultMap.put("code", 200);
+        resultMap.put("message", "Change Successfully");
+        return resultMap;
+
+    }
+
+    public Map<String, Object> stopCard(Map<String, Object> map) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Card card = cardMapper.selectCardByCid((Integer) map.get("cid"));
+        if (card.getValid() == 0){
+            card.setValid(1);
+            cardMapper.stopOrStartCard(card);
+        }else{
+            card.setValid(0);
+            cardMapper.stopOrStartCard(card);
+        }
+        resultMap.put("code", 200);
+        resultMap.put("message", "Change Successfully");
+        return resultMap;
     }
 }

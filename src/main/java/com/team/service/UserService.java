@@ -8,6 +8,7 @@ import com.team.entity.Project;
 import com.team.entity.Rent;
 import com.team.entity.User;
 import com.team.mapper.*;
+import com.team.tools.ServiceHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,8 @@ public class UserService {
     private FacilityMapper facilityMapper;
     @Resource
     private RentMapper rentMapper;
+    @Resource
+    private ServiceHelper serviceHelper;
 
     @Value("${manager.email}")
     private String email;
@@ -243,6 +246,11 @@ public class UserService {
         User u = userMapper.selectOneUserByEmail(email);
         Integer money = u.getMoney();
         Card card = cardMapper.selectCardByCid(cid);
+        if(card.getValid() == 0){
+            resultMap.put("code", 401);
+            resultMap.put("message", "Wrong Card!");
+            return resultMap;
+        }
         if(card.getMoney()>money){
             resultMap.put("code", 400);
             resultMap.put("message", "The balance is insufficient, please recharge first!");
@@ -262,29 +270,6 @@ public class UserService {
         }
         resultMap.put("code", 200);
         return resultMap;
-    }
-
-    //计算某时间段某设施剩余人数
-    Integer residualNumber(LocalDateTime startTime, LocalDateTime endTime, String facilityName){
-        //计算该时段活动人数
-        Integer activityNum = rentMapper.usedNumberOfFacility(facilityName, startTime, endTime);
-        String day = startTime.getDayOfWeek().toString();
-        Integer lessonNum = projectMapper.usedNumberOfFacility(facilityName, startTime, endTime);
-        Integer weekDay = 0;
-        switch (day) {
-            case "MONDAY" -> weekDay = 1;
-            case "TUESDAY" -> weekDay = 2;
-            case "WEDNESDAY" -> weekDay = 3;
-            case "THURSDAY" -> weekDay = 4;
-            case "FRIDAY" -> weekDay = 5;
-            case "SATURDAY" -> weekDay = 6;
-            case "SUNDAY" -> weekDay = 7;
-        }
-        startTime = startTime.withDayOfYear(9999).withMonth(12).withDayOfMonth(31);
-        endTime = endTime.withDayOfYear(9999).withMonth(12).withDayOfMonth(31);
-        Integer weekLessonNum = projectMapper.usedWeekNumberOfFacility(facilityName, startTime, endTime, weekDay);
-        //计算该时段课程人数
-        return activityNum+lessonNum+weekLessonNum;
     }
 
     public Map<String, Object> bookActivity(Map<String, Object> map, String email) {
@@ -317,7 +302,7 @@ public class UserService {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        Integer usedCapacity = residualNumber(startTime, endTime, facility);
+        Integer usedCapacity = serviceHelper.residualNumber(startTime, endTime, facility);
         if (capacity >= (usedCapacity+num)){
             User user = userMapper.selectOneUserByEmail(email);
             Integer userMoney = user.getMoney();

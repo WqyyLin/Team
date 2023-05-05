@@ -51,8 +51,8 @@ public class AppManagerController {
     }
 
     @PostMapping("facilities")
-    public @ResponseBody Map<String, Object> addActivityLesson(@RequestBody Map<String, Object> map){
-        return managerService.addActivityLesson(map);
+    public @ResponseBody Map<String, Object> addActivityProject(@RequestBody Map<String, Object> map){
+        return managerService.addActivityProject(map);
     }
 
     /**

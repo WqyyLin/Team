@@ -1,6 +1,7 @@
 package com.team.tools;
 
 import com.team.mapper.FacilityMapper;
+import com.team.mapper.ProjectMapper;
 import com.team.mapper.RentMapper;
 import com.team.mapper.UserMapper;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +26,8 @@ public class ServiceHelper {
 
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private ProjectMapper projectMapper;
 
     /**
      * 计算某日新注册人数
@@ -93,5 +96,28 @@ public class ServiceHelper {
 //    public Double todayAttendanceRate(@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime time){
 //        return (double)rentMapper.selectTotalUsedFacilityNumber(time, LocalDateTime.of(time.toLocalDate(), LocalTime.MAX))/ facilityMapper.selectFacilityNumber();
 //    }
+
+    //计算某时间段某设施剩余人数
+    public Integer residualNumber(LocalDateTime startTime, LocalDateTime endTime, String facilityName){
+        //计算该时段活动人数
+        Integer activityNum = rentMapper.usedNumberOfFacility(facilityName, startTime, endTime);
+        String day = startTime.getDayOfWeek().toString();
+        Integer lessonNum = projectMapper.usedNumberOfFacility(facilityName, startTime, endTime);
+        Integer weekDay = 0;
+        switch (day) {
+            case "MONDAY" -> weekDay = 1;
+            case "TUESDAY" -> weekDay = 2;
+            case "WEDNESDAY" -> weekDay = 3;
+            case "THURSDAY" -> weekDay = 4;
+            case "FRIDAY" -> weekDay = 5;
+            case "SATURDAY" -> weekDay = 6;
+            case "SUNDAY" -> weekDay = 7;
+        }
+        startTime = startTime.withDayOfYear(9999).withMonth(12).withDayOfMonth(31);
+        endTime = endTime.withDayOfYear(9999).withMonth(12).withDayOfMonth(31);
+        Integer weekLessonNum = projectMapper.usedWeekNumberOfFacility(facilityName, startTime, endTime, weekDay);
+        //计算该时段课程人数
+        return activityNum+lessonNum+weekLessonNum;
+    }
 
 }
