@@ -21,8 +21,11 @@ public interface RentMapper {
     @Update("UPDATE rent SET used=1, valid=0 WHERE rid=#{rid}")
     void updateDeleteOrder(@Param("rid") Integer rid);
 
-    @Update("UPDATE rent SET used=1 WHERE orderNumber=#{orderNumber}")
+    @Update("UPDATE rent SET num=0, used=1 WHERE orderNumber=#{orderNumber}")
     void updateBookStatus(@Param("orderNumber") String orderNumber);
+
+    @Update("UPDATE rent SET num=#{num} WHERE orderNumber=#{orderNumber}")
+    void updateLessonNum(@Param("num") Integer num, @Param("orderNumber") String orderNumber);
 
     @Select("SELECT * FROM team.rent where email=#{email} and used=0 order by ABS(timestampdiff(SECOND, limitTime, #{time}))")
     List<Map<String, Object>> selectOrderByEmail(@Param("time") LocalDateTime time ,@Param("email") String email);
@@ -90,4 +93,5 @@ public interface RentMapper {
 
     @Select("SELECT count(*) FROM rent WHERE facility=#{facility} AND isLesson=0 AND ((#{startTime} between time and limitTime) or (#{endTime} between time and limitTime)")
     Integer usedNumberOfFacility(@Param("facility") String facility, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
+
 }

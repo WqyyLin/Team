@@ -408,7 +408,20 @@ public class UserService {
             resultMap.put("code", 400);
             resultMap.put("message", "The order does not exist!");
         }else{
-            rentMapper.updateBookStatus(orderNumber);
+            Rent r = rentMapper.selectRentByRid(rid);
+            if (r.getIsLesson() == 1){
+                if (projectMapper.selectProjectByPid(r.getPid()).getIsWeekly() == 1){
+                    if(r.getNum() == 1){
+                        rentMapper.updateBookStatus(orderNumber);
+                    }else{
+                        rentMapper.updateLessonNum(r.getNum()-1, orderNumber);
+                    }
+                }else{
+                    rentMapper.updateBookStatus(orderNumber);
+                }
+            }else{
+                rentMapper.updateBookStatus(orderNumber);
+            }
             resultMap.put("code", 200);
             resultMap.put("message", "Successfully!");
         }
