@@ -15,6 +15,10 @@ public interface FacilityMapper {
     @Select("SELECT * FROM facility WHERE fid = #{fid}")
     Facility selectFacilityByFid(@Param("fid") Integer fid);
 
+    @Select("SELECT * FROM facility WHERE name = #{name}")
+    List<Facility> selectAllFacilityOfOneName(@Param("name") String name);
+
+
     /**
      * 查找所有设施的总容量和
      */
@@ -29,6 +33,9 @@ public interface FacilityMapper {
      */
     @Select("SELECT fid as id, name, capacity, count(name) as number, description, startTime, endTime FROM facility group by name")
     List<Map<String, Object>> selectAllFacility();
+
+    @Select("SELECT fid as id, name, capacity, count(name) as number, description, startTime, endTime FROM facility WHERE isValid=1 group by name")
+    List<Map<String, Object>> selectAllValidFacility();
 
     /**
      * 查找该类设施总量
@@ -49,11 +56,14 @@ public interface FacilityMapper {
             " VALUES ( #{name}, #{capacity}, #{description}, #{title}, 1, #{stopTime}, #{startTime}, #{endTime})")
     void insertFacility(Facility facility);
 
+    @Update("UPDATE facility SET name=#{name}, capacity=#{capacity}, description=#{description}, title=#{title}, isValid=#{isValid}, stopTime=#{stopTime}, startTime=#{startTime}, endTime=#{endTime} WHERE fid=#{fid}")
+    void updateFacilityInfo(Facility facility);
+
     @Update("UPDATE facility SET name = #{name}, capacity = #{capacity} WHERE fac = #{fid}")
     int updateFacility(@Param("fid") int fid, @Param("name") String name, @Param("capacity") Integer capacity);
 
-    @Update("UPDATE team.facility SET isValid = 0 WHERE name = #{name}")
-    void stopFacility(@Param("name") String name);
+    @Update("UPDATE team.facility SET isValid = #{isValid} WHERE name = #{name}")
+    void stopFacility(Facility facility);
 
     @Update("UPDATE team.facility SET isValid = 1, stopTime = #{stopTime} WHERE isValid = 0 And stopTime < #{time}")
     void restartFacility(@Param("stopTime")LocalDateTime stopTime, @Param("time") LocalDateTime time);

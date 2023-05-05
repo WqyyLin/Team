@@ -71,10 +71,10 @@ public class ManagerController {
     /**
      * 修改设施
      */
-//    @PutMapping("facilities")
-//    public Map<String, Object> changeFacility(Integer fid, String name, Integer capacity){
-//        return managerService.changeFacility(fid, name, capacity);
-//    }
+    @PutMapping("facilities")
+    public Map<String, Object> changeFacility(Map<String, Object> map){
+        return managerService.changeFacility(map);
+    }
 
     /**
      * 删除设施
@@ -82,6 +82,11 @@ public class ManagerController {
     @DeleteMapping("facilities")
     public Map<String, Object> deleteFacility(@RequestBody Map<String, Object> map){
         return managerService.deleteFacility(map);
+    }
+
+    @PostMapping("facilities/stop")
+    public Map<String, Object> stopFacility(@RequestBody Map<String, Object> map){
+        return managerService.stopFacility(map);
     }
 
     /**

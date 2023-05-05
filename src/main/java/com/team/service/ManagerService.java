@@ -375,6 +375,7 @@ public class ManagerService {
             //获取活动名称
             String activityName = (String) map.get("name");
             Integer isLesson = (Integer) map.get("type");
+            String acDescription = (String) map.get("description");
             if (acticityMapper.selectIsAvailable(activityName, name, isLesson) >= 1) {
                 unValidActivities++;
                 continue;
@@ -383,6 +384,7 @@ public class ManagerService {
             activity.setName(activityName);
             activity.setFacility(name);
             activity.setIsLesson(isLesson);
+            activity.setDescription(acDescription);
             acticityMapper.insertActivity(activity);
         }
         if (unValidActivities != 0) {
@@ -398,25 +400,111 @@ public class ManagerService {
     /**
      * 修改设施
      */
-//    public Map<String, Object> changeFacility(Integer fid, String name, Integer capacity){
-//        Map<String, Object> resultMap = new HashMap<>();
-//        Facility facility = facilityMapper.selectFacilityByFid(fid);
-//        int nowCapacity = facility.getCapacity();
-////        if(capacity < facility.getNow()){
-////            resultMap.put("code", 400);
-////            resultMap.put("message", "容量过小");
-////            return resultMap;
-////        }
-//        int result = facilityMapper.updateFacility(fid, name, capacity);
-//        if(result > 0){
-//            resultMap.put("code", 200);
-//            resultMap.put("message", "修改成功");
-//        }else{
-//            resultMap.put("code", 400);
-//            resultMap.put("message", "修改失败");
-//        }
-//        return resultMap;
-//    }
+    public Map<String, Object> changeFacility(Map<String, Object> maps){
+        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> siteInformation = (Map<String, Object>) maps.get("sitesinformation");
+        List<Map<String, Object>> activities = (List<Map<String, Object>>) siteInformation.get("activity");
+        //获取设施名称
+        String name = (String) siteInformation.get("name");
+        List<Facility> facilities = facilityMapper.selectAllFacilityOfOneName(name);
+        //获取设施数量
+        Integer facilitiesNumber = (Integer) siteInformation.get("site_num");
+        //获取单个设施的容量
+        Integer capacity = (Integer) siteInformation.get("max_cap");
+        //获取展示页面标题
+        String title = (String) siteInformation.get("Ad_title");
+        //获取设施详细描述
+        String description = (String) siteInformation.get("Ad_description");
+        //获取营业和歇业时间
+        Integer start = (Integer) siteInformation.get("starttime");
+        LocalTime startTime = LocalTime.of(start, 0, 0);
+        Integer end = (Integer) siteInformation.get("endtime");
+        LocalTime endTime = LocalTime.of(end, 0, 0);
+        for(Facility facility: facilities){
+            facility.setName(name);
+            facility.setCapacity(capacity);
+            facility.setTitle(title);
+            facility.setDescription(description);
+            facility.setStartTime(startTime);
+            facility.setEndTime(endTime);
+            facility.setStopTime(LocalDateTime.of(9999, 12, 3, 0, 0, 0));
+            facilityMapper.updateFacilityInfo(facility);
+        }
+        int num = facilities.size();
+        if(num == facilitiesNumber){
+            resultMap.put("code", 200);
+            resultMap.put("message", "Change successfully");
+            return resultMap;
+        } else if (num < facilitiesNumber) {
+            Facility facility = new Facility();
+            facility.setCapacity(capacity);
+            facility.setName(name);
+            facility.setTitle(title);
+            facility.setStopTime(LocalDateTime.of(9999, 12, 3, 0, 0, 0));
+            facility.setDescription(description);
+            facility.setStartTime(startTime);
+            facility.setEndTime(endTime);
+            //根据数量添加设施
+            while (facilitiesNumber > num) {
+                facilityMapper.insertFacility(facility);
+                facilitiesNumber--;
+            }
+        } else{
+            for(Facility facility: facilities){
+                if(num == facilitiesNumber) break;
+                facilityMapper.deleteFacility(facility.getFid());
+                facilitiesNumber--;
+            }
+        }
+        List<Activity> activityList = acticityMapper.selectActivity(name);
+        Integer isLesson = activityList.get(0).getIsLesson();
+        int activityListNum = activityList.size();
+        int realListNum = 0;
+        int numOfMap = activities.size();
+        int realMapNum = 0;
+        while (numOfMap!=realMapNum || realListNum != activityListNum) {
+            Map<String, Object> map = activities.get(realMapNum);
+            //获取活动名称
+            String activityName = (String) map.get("name");
+            String acDescription = (String) map.get("description");
+            if(numOfMap!=realMapNum && realListNum != activityListNum){
+                if (acticityMapper.selectIsAvailable(activityName, name, isLesson) >= 1) {
+                    realMapNum++;
+                    realListNum++;
+                    continue;
+                }
+                Activity activity = activityList.get(realListNum);
+                activity.setName(activityName);
+                activity.setDescription(acDescription);
+                acticityMapper.updateActivity(activity);
+                realMapNum++;
+                realListNum++;
+            }else if(numOfMap==realMapNum && realListNum != activityListNum){
+                if (acticityMapper.selectIsAvailable(activityName, name, isLesson) >= 1) {
+                    activityListNum--;
+                    continue;
+                }
+                Activity activity = activityList.get(realListNum);
+                acticityMapper.deleteActivitiesByName(activity.getAid());
+                activityListNum--;
+            }else {
+                if (acticityMapper.selectIsAvailable(activityName, name, isLesson) >= 1) {
+                    realMapNum++;
+                    continue;
+                }
+                Activity activity = new Activity();
+                activity.setName(activityName);
+                activity.setFacility(name);
+                activity.setIsLesson(isLesson);
+                activity.setDescription(acDescription);
+                acticityMapper.insertActivity(activity);
+                realMapNum++;
+            }
+        }
+        resultMap.put("code", 200);
+        resultMap.put("message", "Change successfully");
+        return resultMap;
+    }
 
     /**
      * 删除设施
@@ -430,9 +518,7 @@ public class ManagerService {
         //判断该类设施有无有效预约
         if (serviceHelper.residualNumber(timeNow, LocalDateTime.MAX, facilityName) > 0) {
             resultMap.put("code", 400);
-            resultMap.put("message", "The current facility still has user reservations. Reservations for this facility have been suspended");
-            // 关闭设施预约
-            facilityMapper.stopFacility(facilityName);
+            resultMap.put("message", "Please close your reservation while the facility is in use!");
         } else {
             //删除所有数据库相关信息
             acticityMapper.deleteActivitiesByName(facilityName);
@@ -450,12 +536,6 @@ public class ManagerService {
         Map<String, Object> resultMap = new HashMap<>();
         //得到邮箱
         String email = (String) map.get("email");
-        //得到当前时间
-        LocalDateTime time = LocalDateTime.now();
-        //得到该用户花销
-        Integer money = rentMapper.selectMoneyByUserEmail(email, time);
-        //删除该用户所有rent
-        rentMapper.deleteRentsByUserEmail(email);
         //删除该用户
         userMapper.deleteUserByEmail(email);
         resultMap.put("code", 200);
@@ -692,6 +772,22 @@ public class ManagerService {
         }
         resultMap.put("code", 200);
         resultMap.put("message", "Change Successfully");
+        return resultMap;
+    }
+
+    public Map<String, Object> stopFacility(Map<String, Object> map) {
+        Map<String, Object> resultMap = new HashMap<>();
+        List<Facility> facilities = facilityMapper.selectAllFacilityOfOneName((String) map.get("name"));
+        Facility facility = facilities.get(0);
+        if (facility.getIsValid() == 0) {
+            facility.setIsValid(1);
+            facilityMapper.stopFacility(facility);
+        }else if (facility.getIsValid() == 1){
+            facility.setIsValid(0);
+            facilityMapper.stopFacility(facility);
+        }
+        resultMap.put("code",200);
+        resultMap.put("message","Change Successfully");
         return resultMap;
     }
 }

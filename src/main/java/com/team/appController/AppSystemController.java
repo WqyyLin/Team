@@ -54,7 +54,7 @@ public class AppSystemController {
     @GetMapping("facilities")
     public @ResponseBody Map<String, Object> facilityPage(){
         Map<String, Object> resultMap = new HashMap<>();
-        List<Map<String, Object>> facilities = facilityMapper.selectAllFacility();
+        List<Map<String, Object>> facilities = facilityMapper.selectAllValidFacility();
         resultMap.put("code", 200);
         resultMap.put("facilities", facilities);
         return resultMap;

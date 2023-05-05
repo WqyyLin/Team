@@ -1,10 +1,7 @@
 package com.team.mapper;
 
 import com.team.entity.Activity;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +20,9 @@ public interface ActicityMapper {
     @Select("SELECT name FROM activity WHERE facility = #{facility}")
     List<Map<String, Object>> selectActivityName(@Param("facility") String facility);
 
+    @Select("SELECT * FROM activity WHERE facility = #{facility}")
+    List<Activity> selectActivity(@Param("facility") String facility);
+
     @Select("SELECT count(*) FROM team.activity where name= #{name} and facility = #{facility}")
     Integer selectActivityOfFacilityNumber(@Param("name") String name, @Param("facility") String facility);
 
@@ -32,11 +32,17 @@ public interface ActicityMapper {
     @Select("SELECT * FROM activity WHERE aid = #{aid}")
     Activity selectActivityByAid(@Param("aid") Integer aid);
 
-    @Insert("INSERT INTO activity (name, facility, isLesson) " +
-            " VALUES ( #{name}, #{facility}, #{isLesson})")
+    @Insert("INSERT INTO activity (name, facility, isLesson, description) " +
+            " VALUES ( #{name}, #{facility}, #{isLesson}, #{description})")
     void insertActivity(Activity activity);
 
     @Delete("DELETE FROM activity Where facility= #{name}")
     void deleteActivitiesByName(@Param("name") String name);
+
+    @Delete("DELETE FROM activity Where aid= #{aid}")
+    void deleteActivitiesByName(@Param("aid") Integer aid);
+
+    @Update("UPDATE activity SET name=#{name}, description=#{description} WHERE aid=#{aid}")
+    void updateActivity(Activity activity);
 
 }
