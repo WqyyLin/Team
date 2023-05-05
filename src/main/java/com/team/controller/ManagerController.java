@@ -189,7 +189,7 @@ public class ManagerController {
         return managerService.orderDetail(rid);
     }
 
-    @GetMapping("book")
+    @PostMapping("book")
     public @ResponseBody Map<String, Object> bookInfo(@RequestBody Map<String, Object> map) {
         Map<String, Object> resultMap = new HashMap<>();
         String facility = (String) map.get("facility");
