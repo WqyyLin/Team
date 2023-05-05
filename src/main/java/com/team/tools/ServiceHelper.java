@@ -113,8 +113,8 @@ public class ServiceHelper {
             case "SATURDAY" -> weekDay = 6;
             case "SUNDAY" -> weekDay = 7;
         }
-        startTime = startTime.withDayOfYear(9999).withMonth(12).withDayOfMonth(31);
-        endTime = endTime.withDayOfYear(9999).withMonth(12).withDayOfMonth(31);
+        startTime = startTime.withYear(9999).withMonth(12).withDayOfMonth(31);
+        endTime = endTime.withYear(9999).withMonth(12).withDayOfMonth(31);
         Integer weekLessonNum = projectMapper.usedWeekNumberOfFacility(facilityName, startTime, endTime, weekDay);
         //计算该时段课程人数
         return activityNum+lessonNum+weekLessonNum;

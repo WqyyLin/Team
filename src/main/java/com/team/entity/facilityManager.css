@@ -1,0 +1,16 @@
+.thumb-vertical {
+    background-color: red;
+    width: 10px !important;
+  }
+
+  .track-vertical {
+    background-color: blue;
+    width: 10px !important;
+  }
+
+ .fixed-top{
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+ }
