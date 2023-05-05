@@ -12,7 +12,7 @@ public interface RentMapper {
 
     @Insert("INSERT INTO rent (email, time, money, rentTime, limitTime, pid, isLesson, facility, num, orderNumber, used, valid, peopleNum)" +
             " VALUES ( #{email}, #{time}, #{money}, #{rentTime}, #{limitTime}, #{pid}," +
-            "#{isLesson}, #{facility}, #{num}, #{orderNumber}, 0, 1, 1)")
+            "#{isLesson}, #{facility}, #{num}, #{orderNumber}, 0, 1, #{peopleNum})")
     void insertRent(Rent rent);
 
     @Select("SELECT * From rent WHERE rid=#{rid}")

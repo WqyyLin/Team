@@ -200,7 +200,7 @@ public class ManagerController {
             activity.remove("aid");
             String activityName = (String) activity.get("name");
             List<Map<String, Object>> projects = projectMapper.selectAllProjectOfOneActivity(facility, activityName);
-            if ((Integer) activity.get("isLesson") == 1) {
+            if ((Integer) activity.get("isLesson") == 0) {
                 for (Map<String, Object> project : projects) {
                     project.remove("dayOfWeek");
                     project.remove("activity");
