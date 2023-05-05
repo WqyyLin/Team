@@ -382,6 +382,7 @@ public class UserService {
                 r.setNum(num);
                 r.setPid(pid);
                 r.setFacility(facility);
+                r.setPeopleNum((Integer) map.get("people"));
                 String orderNumber = user.getId().toString() + money + pid + num+
                         now.getYear() + now.getMonth() + now.getDayOfMonth() + now.getHour() + now.getMinute()+
                         now.getSecond();

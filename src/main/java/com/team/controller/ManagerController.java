@@ -1,11 +1,11 @@
 package com.team.controller;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.team.entity.Activity;
 import com.team.entity.Facility;
+import com.team.entity.Project;
 import com.team.entity.User;
-import com.team.mapper.CardMapper;
-import com.team.mapper.FacilityMapper;
-import com.team.mapper.UserMapper;
+import com.team.mapper.*;
 import com.team.service.ManagerService;
 import com.team.service.UserService;
 import org.apache.ibatis.annotations.Delete;
@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @RestController
 @RequestMapping("user/manager")
@@ -30,6 +34,10 @@ public class ManagerController {
     private FacilityMapper facilityMapper;
     @Resource
     private CardMapper cardMapper;
+    @Resource
+    private ActicityMapper acticityMapper;
+    @Resource
+    private ProjectMapper projectMapper;
 
     /**
      * 管理员主页面
@@ -181,4 +189,69 @@ public class ManagerController {
         return managerService.orderDetail(rid);
     }
 
+    @GetMapping("book")
+    public @ResponseBody Map<String, Object> bookInfo(@RequestBody Map<String, Object> map) {
+        Map<String, Object> resultMap = new HashMap<>();
+        String facility = (String) map.get("facility");
+        List<Map<String, Object>> activities = acticityMapper.selectActivityMap(facility);
+        for (Map<String, Object> activity : activities) {
+            activity.remove("money");
+            activity.remove("description");
+            activity.remove("aid");
+            String activityName = (String) activity.get("name");
+            List<Map<String, Object>> projects = projectMapper.selectAllProjectOfOneActivity(facility, activityName);
+            if ((Integer) activity.get("isLesson") == 1) {
+                for (Map<String, Object> project : projects) {
+                    project.remove("dayOfWeek");
+                    project.remove("activity");
+                    project.remove("isWeekly");
+                    project.remove("description");
+                    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String startTime = df.format((LocalDateTime) project.get("startTime")).replace(" ", "-");
+                    String endTime = df.format((LocalDateTime) project.get("endTime")).replace(" ", "-");
+                    project.put("time", startTime + "--->" + endTime);
+                    project.remove("startTime");
+                    project.remove("endTime");
+                    project.remove("facility");
+                    project.remove("isLesson");
+                    project.remove("pid");
+
+                }
+                activity.put("projects", projects);
+            } else {
+                for (Map<String, Object> project : projects) {
+                    String[] week = ((String) project.get("dayOfWeek")).split(",");
+                    String trueWeek = "";
+                    for (String w : week) {
+                        switch (w) {
+                            case "1" -> trueWeek = trueWeek + "MON ";
+                            case "2" -> trueWeek = trueWeek + "TUE ";
+                            case "3" -> trueWeek = trueWeek + "WED ";
+                            case "4" -> trueWeek = trueWeek + "THU ";
+                            case "5" -> trueWeek = trueWeek + "FRI ";
+                            case "6" -> trueWeek = trueWeek + "SAT ";
+                            case "7" -> trueWeek = trueWeek + "SUN ";
+                        }
+                    }
+                    project.remove("dayOfWeek");
+                    project.remove("activity");
+                    project.remove("isWeekly");
+                    project.remove("description");
+                    project.remove("facility");
+                    project.remove("isLesson");
+                    project.remove("pid");
+                    SimpleDateFormat df = new SimpleDateFormat("KKaa",Locale.ENGLISH);
+                    ZonedDateTime zdt = LocalDateTime.now().atZone(ZoneId.systemDefault());
+                    String startTime = df.format(Date.from(((LocalDateTime) project.get("startTime")).atZone(ZoneId.systemDefault()).toInstant()));
+                    String endTime = df.format(Date.from(((LocalDateTime) project.get("endTime")).atZone(ZoneId.systemDefault()).toInstant()));
+                    project.put("time", trueWeek + startTime + " - " + endTime);
+                    project.remove("startTime");
+                    project.remove("endTime");
+                }
+                activity.put("projects", projects);
+            }
+        }
+        resultMap.put("activities", activities);
+        return resultMap;
+    }
 }

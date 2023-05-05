@@ -23,5 +23,6 @@ public class Rent {
     private Integer num;
     private Integer used;
     private String orderNumber;
+    private Integer peopleNum;
 
 }
