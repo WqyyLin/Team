@@ -69,17 +69,6 @@ public class SystemController {
     }
 
     /**
-     * 用户登录页面
-     */
-    @GetMapping("user/login")
-    public @ResponseBody Map<String, Object> userLoginPage(){
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("code", 200);
-        resultMap.put("message", "登录页面");
-        return resultMap;
-    }
-
-    /**
      * 设施页面
      */
     @GetMapping("facility")

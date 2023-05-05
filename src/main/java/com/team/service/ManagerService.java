@@ -42,6 +42,8 @@ public class ManagerService {
 
     @Resource
     private ServiceHelper serviceHelper;
+    @Resource
+    private MailService mailService;
 
     @Value("${manager.email}")
     private String email;
@@ -485,7 +487,7 @@ public class ManagerService {
                     continue;
                 }
                 Activity activity = activityList.get(realListNum);
-                acticityMapper.deleteActivitiesByName(activity.getAid());
+                acticityMapper.deleteActivityByAid(activity.getAid());
                 activityListNum--;
             }else {
                 if (acticityMapper.selectIsAvailable(activityName, name, isLesson) >= 1) {
@@ -715,14 +717,13 @@ public class ManagerService {
                 if (u.getType() == 0){
                     resultMap.put("code", 402);
                     resultMap.put("message", "No authority!");
-                    return resultMap;
                 }else{
                     resultMap.put("code", 200);
                     resultMap.put("message", "Administrator login successfully!");
                     resultMap.put("user", user);
-                    resultMap.put("status", "manager");
-                    return resultMap;
+                    resultMap.put("status", "staff");
                 }
+                return resultMap;
             }
         }
     }
@@ -788,6 +789,20 @@ public class ManagerService {
         }
         resultMap.put("code",200);
         resultMap.put("message","Change Successfully");
+        return resultMap;
+    }
+
+    public Map<String, Object> orderDetail(Integer rid) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Rent r = rentMapper.selectRentByRid(rid);
+        if (r == null){
+            resultMap.put("code", 400);
+            resultMap.put("message", "The order is too old and has been deleted!");
+        }else{
+            mailService.sendMailForOrder(r, r.getEmail());
+            resultMap.put("code", 200);
+            resultMap.put("message", "Register successfully, please go to the mailbox for account activation!");
+        }
         return resultMap;
     }
 }

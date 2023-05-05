@@ -90,11 +90,6 @@ public class AppUserController {
         return userService.getOrder(orderNumber);
     }
 
-    @PostMapping("order/details/{rid}")
-    public @ResponseBody Map<String, Object> orderDetail(@PathVariable Integer rid){
-        return userService.orderDetail(rid);
-    }
-
     @DeleteMapping("order/{rid}")
     public @ResponseBody Map<String, Object> deleteOrder(@PathVariable Integer rid){
         return userService.deleteOrder(rid);

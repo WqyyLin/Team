@@ -40,7 +40,7 @@ public interface ActicityMapper {
     void deleteActivitiesByName(@Param("name") String name);
 
     @Delete("DELETE FROM activity Where aid= #{aid}")
-    void deleteActivitiesByName(@Param("aid") Integer aid);
+    void deleteActivityByAid(@Param("aid") Integer aid);
 
     @Update("UPDATE activity SET name=#{name}, description=#{description} WHERE aid=#{aid}")
     void updateActivity(Activity activity);

@@ -142,7 +142,7 @@ public class UserService {
 
     public Map<String, Object> logoutAccount(String status){
         Map<String, Object> resultMap = new HashMap<>();
-        if (status.equals("login") || status.equals("manager")){
+        if (status.equals("login") || status.equals("manager") || status.equals("staff")){
             //登出成功
             resultMap.put("code", 200);
             resultMap.put("message", "Successfully log out!");
@@ -410,20 +410,6 @@ public class UserService {
             rentMapper.updateBookStatus(orderNumber);
             resultMap.put("code", 200);
             resultMap.put("message", "Successfully!");
-        }
-        return resultMap;
-    }
-
-    public Map<String, Object> orderDetail(Integer rid) {
-        Map<String, Object> resultMap = new HashMap<>();
-        Rent r = rentMapper.selectRentByRid(rid);
-        if (r == null){
-            resultMap.put("code", 400);
-            resultMap.put("message", "The order is too old and has been deleted!");
-        }else{
-            mailService.sendMailForOrder(r, r.getEmail());
-            resultMap.put("code", 200);
-            resultMap.put("message", "Register successfully, please go to the mailbox for account activation!");
         }
         return resultMap;
     }

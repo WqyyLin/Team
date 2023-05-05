@@ -176,4 +176,9 @@ public class ManagerController {
         return managerService.stopCard(map);
     }
 
+    @PostMapping("order/sent/{rid}")
+    public @ResponseBody Map<String, Object> orderDetail(@PathVariable Integer rid){
+        return managerService.orderDetail(rid);
+    }
+
 }
