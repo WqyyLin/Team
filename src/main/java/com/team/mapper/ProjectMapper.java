@@ -38,10 +38,10 @@ public interface ProjectMapper {
     @Select("SELECT * FROM project where facility=#{facility}")
     List<Map<String, Object>> selectAllProjectOfOneFacility(@Param("facility") String facility);
 
-    @Select("SELECT count(capacity) FROM project WHERE facility=#{facility} AND isLesson=1 AND isWeekly=0 AND ((#{startTime} between startTime and endTime) or (#{endTime} between startTime and endTime)")
+    @Select("SELECT count(capacity) FROM project WHERE facility=#{facility} AND isLesson=1 AND isWeekly=0 AND ((#{startTime} between startTime and endTime) or (#{endTime} between startTime and endTime))")
     Integer usedNumberOfFacility(@Param("facility") String facility, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
-    @Select("SELECT count(capacity) FROM project WHERE find_in_set(#{weekDay}, dayOfWeek) AND isWeekly=1 AND facility=#{facility} AND isLesson=1 AND ((#{startTime} between startTime and endTime) or (#{endTime} between startTime and endTime)")
+    @Select("SELECT count(capacity) FROM project WHERE find_in_set(#{weekDay}, dayOfWeek) AND isWeekly=1 AND facility=#{facility} AND isLesson=1 AND ((#{startTime} between startTime and endTime) or (#{endTime} between startTime and endTime))")
     Integer usedWeekNumberOfFacility(@Param("facility") String facility, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime, @Param("weekDay") Integer weekDay);
 
     @Update("UPDATE team.project SET picture=#{picture} where name=#{name} and facility=#{facility} and activity=#{activity}")
