@@ -133,7 +133,7 @@ public class UserService {
                 return resultMap;
             }
             resultMap.put("code", 200);
-            resultMap.put("message", "Administrator login successfully!");
+            resultMap.put("message", "User login successfully!");
             resultMap.put("user", user);
             resultMap.put("status", "login");
             return resultMap;
