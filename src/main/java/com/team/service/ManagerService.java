@@ -133,29 +133,29 @@ public class ManagerService {
         String activityName = (String) map.get("Activity_name");
         //获取项目编号
         Integer isLesson = Integer.parseInt((String) map.get("lesson"));
+        String lessonName = (String) map.get("Name");
+        Activity newActivity = null;
         if (isAddActivity) {
             if (acticityMapper.selectIsAvailable(activityName, facilityName, isLesson) >= 1) {
                 resultMap.put("code", 401);
                 resultMap.put("message", "Illegal activity");
                 return resultMap;
             }
-            Activity newActivity = new Activity();
+            newActivity = new Activity();
             newActivity.setFacility(facilityName);
             newActivity.setIsLesson(isLesson);
             newActivity.setName(activityName);
-            acticityMapper.insertActivity(newActivity);
         } else {
             if (acticityMapper.selectIsAvailable(activityName, facilityName, isLesson) < 1) {
                 resultMap.put("code", 402);
                 resultMap.put("message", "Illegal activity");
                 return resultMap;
             }
-        }
-        String lessonName = (String) map.get("Name");
-        if (projectMapper.selectIsAvailable(lessonName, facilityName, activityName) >= 1) {
-            resultMap.put("code", 404);
-            resultMap.put("message", "The project already exists");
-            return resultMap;
+            if (projectMapper.selectIsAvailable(lessonName, facilityName, activityName) >= 1) {
+                resultMap.put("code", 404);
+                resultMap.put("message", "The project already exists");
+                return resultMap;
+            }
         }
         Project project = new Project();
         project.setName(lessonName);
@@ -280,6 +280,7 @@ public class ManagerService {
         }
         String week = weekDay.toString();
         project.setWeekDay(week);
+        acticityMapper.insertActivity(newActivity);
         projectMapper.insertProject(project);
         resultMap.put("code", 200);
         resultMap.put("message", "Add successfully");
