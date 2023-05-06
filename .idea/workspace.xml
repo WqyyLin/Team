@@ -7,10 +7,6 @@
     <list default="true" id="02e88ea1-ea5b-4dd9-a2d8-5968ce1fd25d" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/team/controller/ManagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/controller/ManagerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/entity/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/entity/Project.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mapper/ProjectMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mapper/ProjectMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mapper/RentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mapper/RentMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/service/ManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/service/ManagerService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,7 +184,7 @@
       <workItem from="1683275320361" duration="343000" />
       <workItem from="1683282065355" duration="2138000" />
       <workItem from="1683299745390" duration="10673000" />
-      <workItem from="1683336944847" duration="28406000" />
+      <workItem from="1683336944847" duration="28820000" />
     </task>
     <servers />
   </component>

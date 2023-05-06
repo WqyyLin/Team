@@ -347,8 +347,8 @@ public class ManagerController {
                 Integer used = serviceHelper.residualNumber(startTime, endTime, facilityName);
                 if (used + capacity <= totalCapacity){
                     Map<String, Object> t = new HashMap<>();
-                    t.put("startTime", startTime);
-                    t.put("endTime", endTime);
+                    t.put("starttime", startTime);
+                    t.put("endtime", endTime);
                     mapList.add(t);
                 }
             }
