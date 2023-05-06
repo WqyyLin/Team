@@ -2,10 +2,7 @@ package com.team.mapper;
 
 import com.team.entity.Activity;
 import com.team.entity.Project;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.BlobTypeHandler;
 
 import java.sql.Blob;
@@ -52,4 +49,10 @@ public interface ProjectMapper {
 
     @Update("UPDATE team.project SET picture=#{picture} where name=#{name} and facility=#{facility} and activity=#{activity}")
     void insertProjectPicture(@Param("dayOfWeek") Blob picture, @Param("name")String name, @Param("facility")String facility, @Param("activity")String activity);
+
+    @Delete("DELETE FROM project WHERE facility = #{facility}")
+    void deleteFacilitiesByName(@Param("facility") String facility);
+
 }
+
+

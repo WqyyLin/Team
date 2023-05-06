@@ -526,6 +526,7 @@ public class ManagerService {
             //删除所有数据库相关信息
             acticityMapper.deleteActivitiesByName(facilityName);
             facilityMapper.deleteFacilitiesByName(facilityName);
+            projectMapper.deleteFacilitiesByName(facilityName);
             resultMap.put("code", 200);
             resultMap.put("message", "Deletion completed");
         }
