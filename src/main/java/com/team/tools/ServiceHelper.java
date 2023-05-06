@@ -1,5 +1,7 @@
 package com.team.tools;
 
+import com.team.entity.Facility;
+import com.team.entity.Rent;
 import com.team.mapper.FacilityMapper;
 import com.team.mapper.ProjectMapper;
 import com.team.mapper.RentMapper;
@@ -13,7 +15,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ServiceHelper {
@@ -88,14 +92,21 @@ public class ServiceHelper {
         }
         return increase;
     }
-//
-//    //给错了可能，记得找刘瑞杰对应一下
-//    /**
-//     * 计算当日满场率
-//     */
-//    public Double todayAttendanceRate(@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime time){
-//        return (double)rentMapper.selectTotalUsedFacilityNumber(time, LocalDateTime.of(time.toLocalDate(), LocalTime.MAX))/ facilityMapper.selectFacilityNumber();
-//    }
+
+
+    /**
+     * 计算当日满场率
+     */
+    public Map<String, Object> todayAttendanceRate(@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime time){
+        Map<String, Object> resultMap = new HashMap<>();
+        List<Double> rates = new ArrayList<>();
+        List<Map<String, Object>> facilities= facilityMapper.selectAllFacility();
+        for (Map<String, Object> facility: facilities){
+            String facilityName = (String) facility.get("name");
+            Integer rentsNum = rentMapper.selectTotalUsedFacilityNumber(time, LocalDateTime.of(time.toLocalDate(), LocalTime.MAX), facilityName);
+        }
+        return resultMap;
+    }
 
     //计算某时间段某设施剩余人数
     public Integer residualNumber(LocalDateTime startTime, LocalDateTime endTime, String facilityName){

@@ -36,8 +36,8 @@ public interface RentMapper {
     @Select("SELECT sum(num*peopleNum) FROM rent WHERE pid=#{pid}")
     Integer numOfProject(@Param("pid") Integer pid);
 
-    @Select("SELECT count(facility) FROM rent where time between #{firstRentTime} and #{LastRentTime}")
-    Integer selectTotalUsedFacilityNumber(@Param("firstRentTime") LocalDateTime firstRentTime, @Param("LastRentTime") LocalDateTime LastRentTime);
+    @Select("SELECT count(num * peopleNum) FROM rent where time between #{firstRentTime} and #{LastRentTime} and facility=#{facility}")
+    Integer selectTotalUsedFacilityNumber(@Param("firstRentTime") LocalDateTime firstRentTime, @Param("LastRentTime") LocalDateTime LastRentTime, @Param("facility") String facility);
 
     @Select("SELECT limitTime FROM rent where rid = #{rid}")
     LocalDateTime selectRentTimeByRid(@Param("rid") Integer rid);
