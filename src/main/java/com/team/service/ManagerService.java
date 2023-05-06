@@ -99,7 +99,7 @@ public class ManagerService {
         Map<String, Object> resultMap = new HashMap<>();
         List<Map<String, Object>> facilities = facilityMapper.selectAllFacility();
         for (Map<String, Object> facility : facilities) {
-            facility.put("activity", acticityMapper.selectActivityName((String) facility.get("name")));
+            facility.put("activity", acticityMapper.selectActivityInfo((String) facility.get("name")));
             Time startTime = (Time) facility.get("startTime");
             Time endTime = (Time) facility.get("endTime");
             facility.put("startTime", startTime);
@@ -815,7 +815,7 @@ public class ManagerService {
             facility.put("Ad_title", facility.remove("title"));
             facility.put("groundnumber", facility.remove("number"));
             facility.put("Ad_describtion", facility.remove("description"));
-            facility.put("activity", acticityMapper.selectActivityName((String) facility.get("name")));
+            facility.put("activity", acticityMapper.selectActivityInfo((String) facility.get("name")));
             Time startTime = (Time) facility.get("startTime");
             Time endTime = (Time) facility.get("endTime");
             facility.remove("startTime");
