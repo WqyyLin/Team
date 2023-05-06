@@ -469,11 +469,11 @@ public class ManagerService {
         int numOfMap = activities.size();
         int realMapNum = 0;
         while (numOfMap!=realMapNum || realListNum != activityListNum) {
-            Map<String, Object> map = activities.get(realMapNum);
-            //获取活动名称
-            String activityName = (String) map.get("name");
-            String acDescription = (String) map.get("description");
             if(numOfMap!=realMapNum && realListNum != activityListNum){
+                Map<String, Object> map = activities.get(realMapNum);
+                //获取活动名称
+                String activityName = (String) map.get("name");
+                String acDescription = (String) map.get("description");
                 if (acticityMapper.selectIsAvailable(activityName, name, (Integer) map.get("isLesson")) >= 1) {
                     realMapNum++;
                     realListNum++;
@@ -486,14 +486,14 @@ public class ManagerService {
                 realMapNum++;
                 realListNum++;
             }else if(numOfMap==realMapNum && realListNum != activityListNum){
-                if (acticityMapper.selectIsAvailable(activityName, name, (Integer) map.get("isLesson")) >= 1) {
-                    activityListNum--;
-                    continue;
-                }
                 Activity activity = activityList.get(realListNum);
                 acticityMapper.deleteActivityByAid(activity.getAid());
                 activityListNum--;
             }else {
+                Map<String, Object> map = activities.get(realMapNum);
+                //获取活动名称
+                String activityName = (String) map.get("name");
+                String acDescription = (String) map.get("description");
                 if (acticityMapper.selectIsAvailable(activityName, name, (Integer) map.get("isLesson")) >= 1) {
                     realMapNum++;
                     continue;
