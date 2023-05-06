@@ -311,4 +311,10 @@ public class ManagerController {
         }
         return resultMap;
     }
+
+    @GetMapping("all")
+    public @ResponseBody Map<String, Object> allInformation(){
+        return managerService.allInformation();
+    }
+
 }

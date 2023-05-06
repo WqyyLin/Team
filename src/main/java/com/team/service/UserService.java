@@ -342,6 +342,7 @@ public class UserService {
                     userMapper.updateUserMoney(userMoney-money, email);
                 }
                 resultMap.put("code", 200);
+                resultMap.put("money", money);
                 resultMap.put("message", "Successful appointment!");
                 resultMap.put("orderNumber", r.getOrderNumber());
             }else{
@@ -406,7 +407,9 @@ public class UserService {
                 r.setOrderNumber(orderNumber);
                 rentMapper.insertRent(r);
                 resultMap.put("code", 200);
+                resultMap.put("money", money);
                 resultMap.put("message", "Successful appointment!");
+                resultMap.put("orderNumber", r.getOrderNumber());
             }else{
                 resultMap.put("code", 401);
                 resultMap.put("message", "Balance is insufficient, please recharge it first!");

@@ -806,4 +806,36 @@ public class ManagerService {
         }
         return resultMap;
     }
+
+    public Map<String, Object> allInformation() {
+        Map<String, Object> resultMap = new HashMap<>();
+        List<Map<String, Object>> facilities = facilityMapper.selectAllFacility();
+        for (Map<String, Object> facility : facilities) {
+            facility.put("holdpeople", facility.remove("capacity"));
+            facility.put("Ad_title", facility.remove("title"));
+            facility.put("groundnumber", facility.remove("number"));
+            facility.put("Ad_describtion", facility.remove("description"));
+            facility.put("activity", acticityMapper.selectActivityName((String) facility.get("name")));
+            Time startTime = (Time) facility.get("startTime");
+            Time endTime = (Time) facility.get("endTime");
+            facility.remove("startTime");
+            facility.remove("endTime");
+            facility.put("starttime", startTime.toLocalTime().getHour());
+            facility.put("endtime", endTime.toLocalTime().getHour());
+        }
+        resultMap.put("groudname", facilities);
+        List<Map<String, Object>> lessons = projectMapper.selectAllLessons();
+        for (Map<String, Object> lesson: lessons){
+            lesson.put("Name", lesson.remove("name"));
+            lesson.put("Reserve_place", lesson.remove("capacity"));
+            lesson.put("Describetion", lesson.remove("description"));
+            lesson.put("Activity_name", lesson.remove("activity"));
+            Integer isWeekly = (Integer) lesson.get("isWeekly");
+            lesson.put("Weekly", lesson.remove("isWeekly"));
+            lesson.put("Sitename", lesson.remove("facility"));
+           
+        }
+        resultMap.put("lesson_show", lessons);
+        return resultMap;
+    }
 }
