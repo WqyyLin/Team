@@ -104,7 +104,17 @@ public class ManagerService {
             //七日增长率
             resultMap.put("increase", serviceHelper.getIncrease(money, 7));
             //当日满场率
-//            resultMap.put("rate", serviceHelper.todayAttendanceRate(time));
+            Integer totalRent = 0;
+            Integer totalCapacity = 0;
+            List<Map<String, Object>> facilities= facilityMapper.selectAllFacility();
+            for (Map<String, Object> facility: facilities){
+                String facilityName = (String) facility.get("name");
+                totalRent += rentMapper.selectTotalUsedFacilityNumber(time, LocalDateTime.of(time.toLocalDate(), LocalTime.MAX), facilityName);
+                Map<String, Object> used = new HashMap<>();
+                used.put("name", facilityName);
+                totalCapacity += facilityMapper.selectCapacity(facilityName);
+            }
+            resultMap.put("rate", totalRent/totalCapacity);
             return resultMap;
         }else{
             resultMap.put("code", 401);
