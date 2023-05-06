@@ -100,10 +100,16 @@ public class ServiceHelper {
     public Map<String, Object> todayAttendanceRate(@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime time){
         Map<String, Object> resultMap = new HashMap<>();
         List<Double> rates = new ArrayList<>();
+        List<Map<String, Object>> total = new ArrayList<>();
         List<Map<String, Object>> facilities= facilityMapper.selectAllFacility();
         for (Map<String, Object> facility: facilities){
             String facilityName = (String) facility.get("name");
             Integer rentsNum = rentMapper.selectTotalUsedFacilityNumber(time, LocalDateTime.of(time.toLocalDate(), LocalTime.MAX), facilityName);
+            Map<String, Object> used = new HashMap<>();
+            used.put("name", facilityName);
+            Integer occupancy = (Integer) (rentsNum / ((Integer) facility.get("capacity") * (Integer) facility.get("num")))*100;
+            if(occupancy > 100) occupancy=100;
+            used.put("occupancy", occupancy);
         }
         return resultMap;
     }

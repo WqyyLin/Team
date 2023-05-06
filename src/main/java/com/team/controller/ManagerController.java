@@ -317,4 +317,9 @@ public class ManagerController {
         return managerService.allInformation();
     }
 
+    @GetMapping("rate")
+    public @ResponseBody Map<String, Object> todayAttendanceRate(){
+        return serviceHelper.todayAttendanceRate(LocalDateTime.of(LocalDate.now(), LocalTime.MIN));
+    }
+
 }
