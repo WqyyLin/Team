@@ -415,9 +415,9 @@ public class ManagerService {
         String name = (String) siteInformation.get("name");
         List<Facility> facilities = facilityMapper.selectAllFacilityOfOneName(name);
         //获取设施数量
-        Integer facilitiesNumber = (Integer) siteInformation.get("site_num");
+        Integer facilitiesNumber = (Integer) siteInformation.get("groundnumber");
         //获取单个设施的容量
-        Integer capacity = (Integer) siteInformation.get("max_cap");
+        Integer capacity = (Integer) siteInformation.get("holdpeople");
         //获取展示页面标题
         String title = (String) siteInformation.get("Ad_title");
         //获取设施详细描述
@@ -440,8 +440,7 @@ public class ManagerService {
         int num = facilities.size();
         if(num == facilitiesNumber){
             resultMap.put("code", 200);
-            resultMap.put("message", "Change successfully");
-            return resultMap;
+            resultMap.put("message1", "Change facilities successfully");
         } else if (num < facilitiesNumber) {
             Facility facility = new Facility();
             facility.setCapacity(capacity);
@@ -509,7 +508,7 @@ public class ManagerService {
             }
         }
         resultMap.put("code", 200);
-        resultMap.put("message", "Change successfully");
+        resultMap.put("message2", "Change successfully");
         return resultMap;
     }
 
