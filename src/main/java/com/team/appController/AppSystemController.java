@@ -204,6 +204,5 @@ public class AppSystemController {
         resultMap.put("project", project);
         return resultMap;
     }
-
 }
 

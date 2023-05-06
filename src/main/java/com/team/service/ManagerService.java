@@ -853,8 +853,6 @@ public class ManagerService {
                 DateTimeFormatter df = DateTimeFormatter.ofPattern("HH:mm:ss");
                 String startTime = df.format(((LocalDateTime) lesson.get("startTime")).toLocalTime());
                 String endTime = df.format(((LocalDateTime) lesson.get("endTime")).toLocalTime());
-//                String startTime = df.format((LocalDateTime) lesson.get("startTime"));
-//                String endTime = df.format((LocalDateTime) lesson.get("endTime"));
                 lesson.put("Starttime", startTime);
                 lesson.remove("startTime");
                 lesson.put("Endtime", endTime);
@@ -870,6 +868,24 @@ public class ManagerService {
                 lesson.put("Endtime", endTime);
                 lesson.remove("endTime");
             }
+        }
+        List<Map<String, Object>> projects = projectMapper.selectAllProjects();
+        for (Map<String, Object> project: projects){
+            project.put("Name", project.remove("name"));
+            project.put("Reserve_place", project.remove("capacity"));
+            project.put("Describetion", project.remove("description"));
+            project.put("Activity_name", project.remove("activity"));
+            project.put("Price", project.remove("money"));
+            project.put("Sitename", project.remove("facility"));
+            project.put("Weekly", 2);
+            DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String startTime = df.format((LocalDateTime) project.get("startTime"));
+            String endTime = df.format((LocalDateTime) project.get("endTime"));
+            project.put("Starttime", startTime);
+            project.remove("startTime");
+            project.put("Endtime", endTime);
+            project.remove("endTime");
+            lessons.add(project);
         }
         resultMap.put("lesson_show", lessons);
         return resultMap;
