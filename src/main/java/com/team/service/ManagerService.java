@@ -349,7 +349,7 @@ public class ManagerService {
             return resultMap;
         }
         //获取单个设施的容量
-        Integer capacity = (Integer) siteInformation.get("max_cap");
+        Integer capacity = Integer.parseInt((String) siteInformation.get("max_cap"));
         facility.setCapacity(capacity);
         //获取展示页面标题
         String title = (String) siteInformation.get("Ad_title");
@@ -358,12 +358,12 @@ public class ManagerService {
         String description = (String) siteInformation.get("Ad_description");
         facility.setDescription(description);
         //获取设施数量
-        Integer facilitiesNumber = (Integer) siteInformation.get("site_num");
+        Integer facilitiesNumber = Integer.parseInt(((String)siteInformation.get("site_num")));
         //获取营业和歇业时间
-        Integer start = (Integer) siteInformation.get("starttime");
+        Integer start = Integer.parseInt(((String) siteInformation.get("starttime")));
         LocalTime startTime = LocalTime.of(start, 0, 0);
         facility.setStartTime(startTime);
-        Integer end = (Integer) siteInformation.get("endtime");
+        Integer end = Integer.parseInt(((String) siteInformation.get("endtime")));
         LocalTime endTime = LocalTime.of(end, 0, 0);
         facility.setEndTime(endTime);
         facility.setStopTime(LocalDateTime.of(9999, 12, 3, 0, 0, 0));
@@ -376,7 +376,7 @@ public class ManagerService {
         for (Map<String, Object> map : activities) {
             //获取活动名称
             String activityName = (String) map.get("name");
-            Integer isLesson = (Integer) map.get("type");
+            Integer isLesson = Integer.parseInt(((String) map.get("type")));
             String acDescription = (String) map.get("description");
             if (acticityMapper.selectIsAvailable(activityName, name, isLesson) >= 1) {
                 unValidActivities++;

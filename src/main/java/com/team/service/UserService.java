@@ -303,19 +303,27 @@ public class UserService {
             throw new RuntimeException(e);
         }
         Integer usedCapacity = serviceHelper.residualNumber(startTime, endTime, facility);
+        Integer userMoney = null;
         if (capacity >= (usedCapacity+num)){
             User user = userMapper.selectOneUserByEmail(email);
-            Integer userMoney = user.getMoney();
+            if (email == null) {
+                user = null;
+            }
             int discount=10;
-            for (Integer cid: cardMapper.selectCidById(user.getId())){
-                Integer now = cardMapper.getDiscount(cid);
-                if(discount > now){
-                    discount = now;
+            if (user != null){
+                userMoney = user.getMoney();
+                for (Integer cid: cardMapper.selectCidById(user.getId())){
+                    Integer now = cardMapper.getDiscount(cid);
+                    if(discount > now){
+                        discount = now;
+                    }
                 }
             }
             money = money*discount/10;
-            if(userMoney >= money){
-                userMapper.updateUserMoney(userMoney-money, email);
+            if(user==null || userMoney >= money){
+                if (user != null){
+                    userMapper.updateUserMoney(userMoney-money, email);
+                }
                 Rent r = new Rent();
                 LocalDateTime now = LocalDateTime.now();
                 r.setRentTime(now);
@@ -328,7 +336,7 @@ public class UserService {
                 r.setPid(pid);
                 r.setFacility(facility);
                 r.setPeopleNum(1);
-                String orderNumber = user.getId().toString() + money + pid + num+
+                String orderNumber =  pid.toString() + money  + num+
                         now.getYear() + now.getMonth() + now.getDayOfMonth() + now.getHour() + now.getMinute()+
                         now.getSecond();
                 r.setOrderNumber(orderNumber);
@@ -359,19 +367,26 @@ public class UserService {
         Integer money = num*oneMoney;
         Integer allCapacity = project.getCapacity();
         Integer usedCapacity = rentMapper.numOfProject(pid);
+        Integer userMoney = null;
         if(allCapacity > usedCapacity){
             User user = userMapper.selectOneUserByEmail(email);
-            Integer userMoney = user.getMoney();
+            if (email == null){
+                user = null;
+            }
             int discount=10;
-            for (Integer cid: cardMapper.selectCidById(user.getId())){
-                Integer now = cardMapper.getDiscount(cid);
-                if(discount > now){
-                    discount = now;
+            if (user != null){
+                for (Integer cid: cardMapper.selectCidById(user.getId())){
+                    Integer now = cardMapper.getDiscount(cid);
+                    if(discount > now){
+                        discount = now;
+                    }
                 }
             }
             money = money*discount/10;
-            if(userMoney >= money){
-                userMapper.updateUserMoney(userMoney-money, email);
+            if(user==null || userMoney >= money){
+                if (user!=null){
+                    userMapper.updateUserMoney(userMoney-money, email);
+                }
                 Rent r = new Rent();
                 LocalDateTime now = LocalDateTime.now();
                 r.setRentTime(now);
@@ -384,7 +399,7 @@ public class UserService {
                 r.setPid(pid);
                 r.setFacility(facility);
                 r.setPeopleNum((Integer) map.get("people"));
-                String orderNumber = user.getId().toString() + money + pid + num+
+                String orderNumber =  pid.toString() + money + num+
                         now.getYear() + now.getMonth() + now.getDayOfMonth() + now.getHour() + now.getMinute()+
                         now.getSecond();
                 r.setOrderNumber(orderNumber);

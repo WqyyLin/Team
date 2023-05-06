@@ -8,6 +8,7 @@ import com.team.entity.User;
 import com.team.mapper.*;
 import com.team.service.ManagerService;
 import com.team.service.UserService;
+import com.team.tools.ServiceHelper;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -38,6 +36,10 @@ public class ManagerController {
     private ActicityMapper acticityMapper;
     @Resource
     private ProjectMapper projectMapper;
+    @Resource
+    private ServiceHelper serviceHelper;
+    @Resource
+    private UserService userService;
 
     /**
      * 管理员主页面
@@ -254,4 +256,52 @@ public class ManagerController {
         resultMap.put("activities", activities);
         return resultMap;
     }
+
+    @PostMapping("surplus")
+    public @ResponseBody Map<String, Object> residualNumber(@RequestBody Map<String, Object> map) {
+        Map<String, Object> resultMap = new HashMap<>();
+        String facilityName = (String) map.get("sitename");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startTime = (LocalDateTime) map.get("startTime");
+        LocalDateTime endTime = (LocalDateTime) map.get("endTime");
+        Integer used = serviceHelper.residualNumber(startTime, endTime, facilityName);
+        Integer all = facilityMapper.selectCapacity(facilityName);
+        if(all > used){
+            resultMap.put("code", 200);
+            resultMap.put("activities", all - used);
+        }else{
+            resultMap.put("code", 400);
+            resultMap.put("message", "The current facility is full");
+        }
+        return resultMap;
+    }
+
+    @PostMapping("facility/book")
+    public @ResponseBody Map<String, Object> book(@RequestBody Map<String, Object> map) {
+        Map<String, Object> resultMap = new HashMap<>();
+        String facilityName = (String) map.get("sitename");
+        String activityName = (String) map.get("activity");
+        String name = (String) map.get("name");
+        Integer isLesson = (Integer) map.get("lesson");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startTime = LocalDateTime.parse((String) map.get("startTime"), df);
+        LocalDateTime endTime = LocalDateTime.parse((String) map.get("endTime"), df);
+        Integer duration = Math.toIntExact(Duration.between(startTime, endTime).toHours());
+        Integer pid = projectMapper.selectPid(name, facilityName, activityName, isLesson);
+        Map<String, Object> target = new HashMap<>();
+        target.put("pid", pid);
+        if (isLesson == 0){
+            target.put("startTime", df.format(startTime));
+            target.put("duration", duration);
+            target.put("num", map.get("total_people"));
+            resultMap = userService.bookActivity(map, null);
+        }else{
+            target.put("num", "total_course");
+            target.put("people", map.get("total_people"));
+            resultMap = userService.bookLesson(map, null);
+        }
+        return resultMap;
+    }
+
+
 }
