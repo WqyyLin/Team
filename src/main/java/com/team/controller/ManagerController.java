@@ -294,11 +294,11 @@ public class ManagerController {
             target.put("startTime", df.format(startTime));
             target.put("duration", duration);
             target.put("num", Integer.parseInt((String) map.get("total_people")));
-            resultMap = userService.bookActivity(map, null);
+            resultMap = userService.bookActivity(target, null);
         }else{
             target.put("num", Integer.parseInt((String) map.get("total_course")));
             target.put("people", Integer.parseInt((String) map.get("total_people")));
-            resultMap = userService.bookLesson(map, null);
+            resultMap = userService.bookLesson(target, null);
         }
         return resultMap;
     }
