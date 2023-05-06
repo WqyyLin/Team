@@ -6,6 +6,7 @@ import com.team.entity.Facility;
 import com.team.entity.Project;
 import com.team.entity.User;
 import com.team.mapper.*;
+import com.team.service.MailService;
 import com.team.service.ManagerService;
 import com.team.service.UserService;
 import com.team.tools.ServiceHelper;
@@ -27,6 +28,8 @@ public class ManagerController {
     @Resource
     private ManagerService managerService;
     @Resource
+    private MailService mailService;
+    @Resource
     private UserMapper userMapper;
     @Resource
     private FacilityMapper facilityMapper;
@@ -40,6 +43,8 @@ public class ManagerController {
     private ServiceHelper serviceHelper;
     @Resource
     private UserService userService;
+    @Resource
+    private RentMapper rentMapper;
 
     /**
      * 管理员主页面
@@ -300,8 +305,10 @@ public class ManagerController {
             target.put("people", Integer.parseInt((String) map.get("total_people")));
             resultMap = userService.bookLesson(target, null);
         }
+        String email = (String) map.get("email");
+        if (email!=null){
+            mailService.sendMailForOrder(rentMapper.selectRentByRid(rentMapper.getRidByOrder((String) resultMap.get("orderNumber"))), email);
+        }
         return resultMap;
     }
-
-
 }

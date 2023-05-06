@@ -321,9 +321,6 @@ public class UserService {
             }
             money = money*discount/10;
             if(user==null || userMoney >= money){
-                if (user != null){
-                    userMapper.updateUserMoney(userMoney-money, email);
-                }
                 Rent r = new Rent();
                 LocalDateTime now = LocalDateTime.now();
                 r.setRentTime(now);
@@ -341,8 +338,12 @@ public class UserService {
                         now.getSecond();
                 r.setOrderNumber(orderNumber);
                 rentMapper.insertRent(r);
+                if (user != null){
+                    userMapper.updateUserMoney(userMoney-money, email);
+                }
                 resultMap.put("code", 200);
                 resultMap.put("message", "Successful appointment!");
+                resultMap.put("orderNumber", r.getOrderNumber());
             }else{
                 resultMap.put("code", 401);
                 resultMap.put("message", "Balance is insufficient, please recharge it first!");
