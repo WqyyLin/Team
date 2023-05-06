@@ -25,6 +25,9 @@ public interface ProjectMapper {
     @Select("SELECT * FROM project WHERE pid=#{pid} and valid=1")
     Project selectProjectByPid(@Param("pid") Integer pid);
 
+    @Select("SELECT * FROM project WHERE pid=#{pid}")
+    Project selectByPid(@Param("pid") Integer pid);
+
     @Select("SELECT pid From project WHERE name=#{name} and facility=#{facility} and activity=#{activity} and isLesson=#{isLesson}")
     Integer selectPid(@Param("name") String name, @Param("facility") String facility, @Param("activity")String activity, @Param("isLesson") Integer isLesson);
 
@@ -60,7 +63,7 @@ public interface ProjectMapper {
     @Update("UPDATE team.project SET picture=#{picture} where name=#{name} and facility=#{facility} and activity=#{activity}")
     void insertProjectPicture(@Param("dayOfWeek") Blob picture, @Param("name")String name, @Param("facility")String facility, @Param("activity")String activity);
 
-    @Update("UPDATE team.facility SET valid = #{valid} WHERE pid = #{pid}")
+    @Update("UPDATE team.project SET valid = #{valid} WHERE pid = #{pid}")
     void stopProject(Project project);
 
     @Delete("DELETE FROM project WHERE facility = #{facility}")

@@ -385,7 +385,7 @@ public class ManagerController {
     public @ResponseBody Map<String, Object> stopProjects(@RequestBody Map<String, Object> map){
         Map<String, Object> resultMap = new HashMap<>();
         Integer pid = (Integer) map.get("pid");
-        Project project = projectMapper.selectProjectByPid(pid);
+        Project project = projectMapper.selectByPid(pid);
         if (project.getValid() == 0) {
             project.setValid(1);
             projectMapper.stopProject(project);
