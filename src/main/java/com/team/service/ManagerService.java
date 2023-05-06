@@ -833,7 +833,44 @@ public class ManagerService {
             Integer isWeekly = (Integer) lesson.get("isWeekly");
             lesson.put("Weekly", lesson.remove("isWeekly"));
             lesson.put("Sitename", lesson.remove("facility"));
-           
+            lesson.put("Price", lesson.remove("money"));
+            lesson.put("Sitename", lesson.remove("facility"));
+            if (isWeekly == 1){
+                String[] week = ((String) lesson.get("dayOfWeek")).split(",");
+                String trueWeek = "";
+                for (String w : week) {
+                    switch (w) {
+                        case "1" -> trueWeek = trueWeek + "MON";
+                        case "2" -> trueWeek = trueWeek + "TUE";
+                        case "3" -> trueWeek = trueWeek + "WED";
+                        case "4" -> trueWeek = trueWeek + "THU";
+                        case "5" -> trueWeek = trueWeek + "FRI";
+                        case "6" -> trueWeek = trueWeek + "SAT";
+                        case "7" -> trueWeek = trueWeek + "SUN";
+                    }
+                    trueWeek += " ";
+                }
+                lesson.put("Weekly_Time", trueWeek);
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("HH:mm:ss");
+                String startTime = df.format(((LocalDateTime) lesson.get("startTime")).toLocalTime());
+                String endTime = df.format(((LocalDateTime) lesson.get("endTime")).toLocalTime());
+//                String startTime = df.format((LocalDateTime) lesson.get("startTime"));
+//                String endTime = df.format((LocalDateTime) lesson.get("endTime"));
+                lesson.put("Starttime", startTime);
+                lesson.remove("startTime");
+                lesson.put("Endtime", endTime);
+                lesson.remove("endTime");
+                lesson.remove("dayOfWeek");
+            }else{
+                lesson.put("Weekly", 2);
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String startTime = df.format((LocalDateTime) lesson.get("startTime"));
+                String endTime = df.format((LocalDateTime) lesson.get("endTime"));
+                lesson.put("Starttime", startTime);
+                lesson.remove("startTime");
+                lesson.put("Endtime", endTime);
+                lesson.remove("endTime");
+            }
         }
         resultMap.put("lesson_show", lessons);
         return resultMap;
