@@ -322,4 +322,23 @@ public class ManagerController {
         return serviceHelper.todayAttendanceRate(LocalDateTime.of(LocalDate.now(), LocalTime.MIN));
     }
 
+    @PostMapping("time")
+    public @ResponseBody Map<String, Object> validTime(@RequestBody Map<String, Object> map){
+        Map<String, Object> resultMap = new HashMap<>();
+        String facilityName = (String) map.get("Sitename");
+        Integer duration = (Integer) map.get("Last");
+        Integer capacity = (Integer) map.get("min_place");
+        Integer totalCapacity = facilityMapper.selectCapacity(facilityName);
+        Facility facility = facilityMapper.selectAllFacilityOfOneName(facilityName).get(0);
+        LocalTime startTimeOfFacility = facility.getStartTime();
+        LocalTime endTimeOfFacility = facility.getEndTime();
+        List<LocalTime> timeList = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        while (startTimeOfFacility.isBefore(endTimeOfFacility)){
+            timeList.add(startTimeOfFacility);
+            startTimeOfFacility = startTimeOfFacility.plusHours(1);
+        }
+    return resultMap;
+    }
+
 }

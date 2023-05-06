@@ -519,7 +519,7 @@ public class ManagerService {
         //得到当前时间
         LocalDateTime timeNow = LocalDateTime.now();
         //判断该类设施有无有效预约
-        if (serviceHelper.residualNumber(timeNow, LocalDateTime.MAX, facilityName) > 0) {
+        if (serviceHelper.residualNumber(timeNow, LocalDateTime.of(9999, 12, 31, 23, 59, 59), facilityName) > 0) {
             resultMap.put("code", 400);
             resultMap.put("message", "Please close your reservation while the facility is in use!");
         } else {
