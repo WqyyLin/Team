@@ -107,10 +107,13 @@ public class ServiceHelper {
             Integer rentsNum = rentMapper.selectTotalUsedFacilityNumber(time, LocalDateTime.of(time.toLocalDate(), LocalTime.MAX), facilityName);
             Map<String, Object> used = new HashMap<>();
             used.put("name", facilityName);
-            Integer occupancy = (Integer) (rentsNum / ((Integer) facility.get("capacity") * (Integer) facility.get("num")))*100;
+            Integer capacity = facilityMapper.selectCapacity(facilityName);
+            Integer occupancy = (Integer) (rentsNum * 100 / capacity);
             if(occupancy > 100) occupancy=100;
             used.put("occupancy", occupancy);
+            total.add(used);
         }
+        resultMap.put("rate", total);
         return resultMap;
     }
 
