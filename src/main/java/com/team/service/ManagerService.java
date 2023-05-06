@@ -65,9 +65,23 @@ public class ManagerService {
             LocalDateTime time = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
             resultMap.put("code", 200);
             //新注册人数
-            resultMap.put("newPeople", serviceHelper.oneDayNewPeopleNumber(time.plusDays(1)));
+            Integer newPeople = serviceHelper.oneDayNewPeopleNumber(time);
+            Integer oldPeople = serviceHelper.oneDayNewPeopleNumber(time.minusDays(1));
+            resultMap.put("newPeople", newPeople);
+            if (oldPeople == 0){
+                resultMap.put("newPeopleRate", 100);
+            }else{
+                resultMap.put("newPeopleRate", (Integer) (newPeople*100/oldPeople));
+            }
             //今日预约人数
-            resultMap.put("rentPeople", serviceHelper.oneDayRentPeople(time));
+            Integer newRent = serviceHelper.oneDayRentPeople(time);
+            Integer oldRent = serviceHelper.oneDayRentPeople(time.minusDays(1));
+            resultMap.put("rentPeople", newRent);
+            if (oldRent == 0){
+                resultMap.put("rentPeopleRate", 100);
+            }else{
+                resultMap.put("rentPeopleRate", (Integer) (newRent*100/oldRent));
+            }
             //30天营业额
             List<Double> money = serviceHelper.getMoney(time, 30);
             resultMap.put("money", money);
@@ -78,7 +92,14 @@ public class ManagerService {
             }
             resultMap.put("thirtyMoney", sum);
             //今日营业额
-            resultMap.put("todayMoney", money.get(29));
+            Double newMoney = money.get(29);
+            Double oldMoney = money.get(28);
+            resultMap.put("todayMoney", newMoney);
+            if (oldMoney == 0){
+                resultMap.put("rentPeopleRate", 100);
+            }else{
+                resultMap.put("rentPeopleRate", (Integer) (newMoney*100/oldMoney));
+            }
             //七日增长率
             resultMap.put("increase", serviceHelper.getIncrease(money, 7));
             //当日满场率
