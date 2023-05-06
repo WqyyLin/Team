@@ -196,5 +196,14 @@ public class AppSystemController {
         return resultMap;
     }
 
+    @GetMapping("lessons/{pid}")
+    public @ResponseBody Map<String, Object> getLessonInfo(@PathVariable Integer pid){
+        Map<String, Object> resultMap = new HashMap<>();
+        Project project = projectMapper.selectProjectByPid(pid);
+        resultMap.put("code", 200);
+        resultMap.put("project", project);
+        return resultMap;
+    }
+
 }
 
