@@ -260,26 +260,28 @@ public class ManagerService {
             return resultMap;
         }
         project.setCapacity(capacity);
-        StringBuilder weekDay = new StringBuilder();
-        for (Integer day : weekTime) {
-            if (day == 1) {
-                weekDay.append("1,");
-            } else if (day == 2) {
-                weekDay.append("2,");
-            } else if (day == 3) {
-                weekDay.append("3,");
-            } else if (day == 4) {
-                weekDay.append("4,");
-            } else if (day == 5) {
-                weekDay.append("5,");
-            } else if (day == 6) {
-                weekDay.append("6,");
-            } else if (day == 7) {
-                weekDay.append("7,");
+        if (isWeekly == 1) {
+            StringBuilder weekDay = new StringBuilder();
+            for (Integer day : weekTime) {
+                if (day == 1) {
+                    weekDay.append("1,");
+                } else if (day == 2) {
+                    weekDay.append("2,");
+                } else if (day == 3) {
+                    weekDay.append("3,");
+                } else if (day == 4) {
+                    weekDay.append("4,");
+                } else if (day == 5) {
+                    weekDay.append("5,");
+                } else if (day == 6) {
+                    weekDay.append("6,");
+                } else if (day == 7) {
+                    weekDay.append("7,");
+                }
             }
+            String week = weekDay.toString();
+            project.setWeekDay(week);
         }
-        String week = weekDay.toString();
-        project.setWeekDay(week);
         acticityMapper.insertActivity(newActivity);
         projectMapper.insertProject(project);
         resultMap.put("code", 200);
