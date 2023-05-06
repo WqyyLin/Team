@@ -354,6 +354,7 @@ public class ManagerController {
             }
             now = now.plusDays(1);
         }
+        resultMap.put("time", mapList);
         return resultMap;
     }
 
