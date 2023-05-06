@@ -832,7 +832,6 @@ public class ManagerService {
             lesson.put("Activity_name", lesson.remove("activity"));
             Integer isWeekly = (Integer) lesson.get("isWeekly");
             lesson.put("Weekly", lesson.remove("isWeekly"));
-            lesson.put("Sitename", lesson.remove("facility"));
             lesson.put("Price", lesson.remove("money"));
             lesson.put("Sitename", lesson.remove("facility"));
             if (isWeekly == 1){
