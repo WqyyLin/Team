@@ -1,6 +1,7 @@
 package com.team.mapper;
 
 import com.team.entity.Activity;
+import com.team.entity.Facility;
 import com.team.entity.Project;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.BlobTypeHandler;
@@ -21,21 +22,30 @@ public interface ProjectMapper {
     @Select("SELECT count(name) FROM project where name=#{name} and facility=#{facility} and activity=#{activity}")
     Integer selectIsAvailable(@Param("name") String name, @Param("facility") String facility, @Param("activity")String activity);
 
-    @Select("SELECT * FROM project WHERE pid=#{pid}")
+    @Select("SELECT * FROM project WHERE pid=#{pid} and valid=1")
     Project selectProjectByPid(@Param("pid") Integer pid);
 
     @Select("SELECT pid From project WHERE name=#{name} and facility=#{facility} and activity=#{activity} and isLesson=#{isLesson}")
     Integer selectPid(@Param("name") String name, @Param("facility") String facility, @Param("activity")String activity, @Param("isLesson") Integer isLesson);
 
     //查找课程
-    @Select("SELECT * FROM project where isLesson=1")
+    @Select("SELECT * FROM project where isLesson=1 and valid=1")
     List<Map<String, Object>> selectAllLessons();
 
-    @Select("SELECT * FROM project where isLesson=0")
+    @Select("SELECT * FROM project where isLesson=1")
+    List<Map<String, Object>> selectLessons();
+
+    @Select("SELECT * FROM project where isLesson=0 and valid=1")
     List<Map<String, Object>> selectAllProjects();
 
-    @Select("SELECT * FROM project where facility=#{facility} and activity=#{activity}")
+    @Select("SELECT * FROM project where isLesson=0")
+    List<Map<String, Object>> selectProjects();
+
+    @Select("SELECT * FROM project where facility=#{facility} and activity=#{activity} and valid=1")
     List<Map<String, Object>> selectAllProjectOfOneActivity(@Param("facility") String facility, @Param("activity") String activity);
+
+    @Select("SELECT * FROM project where facility=#{facility} and activity=#{activity}")
+    List<Map<String, Object>> selectProjectOfOneActivity(@Param("facility") String facility, @Param("activity") String activity);
 
     //查找单个设施所有项目
     @Select("SELECT * FROM project where facility=#{facility}")
@@ -50,8 +60,15 @@ public interface ProjectMapper {
     @Update("UPDATE team.project SET picture=#{picture} where name=#{name} and facility=#{facility} and activity=#{activity}")
     void insertProjectPicture(@Param("dayOfWeek") Blob picture, @Param("name")String name, @Param("facility")String facility, @Param("activity")String activity);
 
+    @Update("UPDATE team.facility SET valid = #{valid} WHERE pid = #{pid}")
+    void stopProject(Project project);
+
     @Delete("DELETE FROM project WHERE facility = #{facility}")
     void deleteFacilitiesByName(@Param("facility") String facility);
+
+    @Delete("DELETE FROM project WHERE pid = #{pid}")
+    void deleteProjectByPid(@Param("pid") Integer pid);
+
 
 }
 

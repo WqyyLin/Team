@@ -94,4 +94,7 @@ public interface RentMapper {
     @Select("SELECT count(*) FROM rent WHERE facility=#{facility} AND isLesson=0 AND ((#{startTime} between time and limitTime) or (#{endTime} between time and limitTime))")
     Integer usedNumberOfFacility(@Param("facility") String facility, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
+    @Select("SELECT count(*) FROM rent WHERE pid=#{pid} and ((#{startTime} between time and limitTime) or (#{endTime} between time and limitTime))")
+    Integer usedNumberOfProject(@Param("pid") Integer pid, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
+
 }

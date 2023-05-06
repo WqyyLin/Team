@@ -365,4 +365,37 @@ public class ManagerController {
         return resultMap;
     }
 
+    @DeleteMapping("projects")
+    public @ResponseBody Map<String, Object> deleteProjects(@RequestBody Map<String, Object> map){
+        Map<String, Object> resultMap = new HashMap<>();
+        Integer pid = (Integer) map.get("pid");
+        Integer num = rentMapper.usedNumberOfProject(pid, LocalDateTime.now(), LocalDateTime.of(9999, 12, 31, 23, 59, 59));
+        if (num > 0){
+            resultMap.put("code", 400);
+            resultMap.put("message", "This facility cannot be deleted due to an existing appointment!");
+        }else{
+            projectMapper.deleteProjectByPid(pid);
+            resultMap.put("code", 200);
+            resultMap.put("message", "Successfully!");
+        }
+        return resultMap;
+    }
+
+    @PutMapping("projects")
+    public @ResponseBody Map<String, Object> stopProjects(@RequestBody Map<String, Object> map){
+        Map<String, Object> resultMap = new HashMap<>();
+        Integer pid = (Integer) map.get("pid");
+        Project project = projectMapper.selectProjectByPid(pid);
+        if (project.getValid() == 0) {
+            project.setValid(1);
+            projectMapper.stopProject(project);
+        }else if (project.getValid() == 1){
+            project.setValid(0);;
+            projectMapper.stopProject(project);
+        }
+        resultMap.put("code",200);
+        resultMap.put("message","Change Successfully");
+        return resultMap;
+    }
+
 }

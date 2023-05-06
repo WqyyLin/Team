@@ -826,7 +826,7 @@ public class ManagerService {
             facility.put("endtime", endTime.toLocalTime().getHour());
         }
         resultMap.put("groudname", facilities);
-        List<Map<String, Object>> lessons = projectMapper.selectAllLessons();
+        List<Map<String, Object>> lessons = projectMapper.selectLessons();
         for (Map<String, Object> lesson: lessons){
             lesson.put("Name", lesson.remove("name"));
             lesson.put("Reserve_place", lesson.remove("capacity"));
@@ -871,7 +871,7 @@ public class ManagerService {
                 lesson.remove("endTime");
             }
         }
-        List<Map<String, Object>> projects = projectMapper.selectAllProjects();
+        List<Map<String, Object>> projects = projectMapper.selectProjects();
         for (Map<String, Object> project: projects){
             project.put("Name", project.remove("name"));
             project.put("Reserve_place", project.remove("capacity"));

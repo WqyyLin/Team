@@ -26,4 +26,5 @@ public class Project {
     private Integer isWeekly;
     private Integer capacity;
     private Integer isLesson;
+    private Integer valid;
 }
