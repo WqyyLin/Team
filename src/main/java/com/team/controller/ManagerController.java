@@ -354,7 +354,14 @@ public class ManagerController {
             }
             now = now.plusDays(1);
         }
-        resultMap.put("time", mapList);
+        if (mapList.isEmpty()){
+            resultMap.put("code", 400);
+            resultMap.put("message", "No effective time!");
+        }else{
+            resultMap.put("code", 200);
+            resultMap.put("time", mapList);
+            resultMap.put("message", "Successfully!");
+        }
         return resultMap;
     }
 
