@@ -87,7 +87,7 @@ public class ManagerController {
      * 修改设施
      */
     @PutMapping("facilities")
-    public Map<String, Object> changeFacility(Map<String, Object> map){
+    public @ResponseBody Map<String, Object> changeFacility(@RequestBody Map<String, Object> map){
         return managerService.changeFacility(map);
     }
 

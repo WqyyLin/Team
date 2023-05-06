@@ -475,7 +475,7 @@ public class ManagerService {
             String activityName = (String) map.get("name");
             String acDescription = (String) map.get("description");
             if(numOfMap!=realMapNum && realListNum != activityListNum){
-                if (acticityMapper.selectIsAvailable(activityName, name, isLesson) >= 1) {
+                if (acticityMapper.selectIsAvailable(activityName, name, (Integer) map.get("isLesson")) >= 1) {
                     realMapNum++;
                     realListNum++;
                     continue;
@@ -487,7 +487,7 @@ public class ManagerService {
                 realMapNum++;
                 realListNum++;
             }else if(numOfMap==realMapNum && realListNum != activityListNum){
-                if (acticityMapper.selectIsAvailable(activityName, name, isLesson) >= 1) {
+                if (acticityMapper.selectIsAvailable(activityName, name, (Integer) map.get("isLesson")) >= 1) {
                     activityListNum--;
                     continue;
                 }
@@ -495,14 +495,14 @@ public class ManagerService {
                 acticityMapper.deleteActivityByAid(activity.getAid());
                 activityListNum--;
             }else {
-                if (acticityMapper.selectIsAvailable(activityName, name, isLesson) >= 1) {
+                if (acticityMapper.selectIsAvailable(activityName, name, (Integer) map.get("isLesson")) >= 1) {
                     realMapNum++;
                     continue;
                 }
                 Activity activity = new Activity();
                 activity.setName(activityName);
                 activity.setFacility(name);
-                activity.setIsLesson(isLesson);
+                activity.setIsLesson((Integer) map.get("isLesson"));
                 activity.setDescription(acDescription);
                 acticityMapper.insertActivity(activity);
                 realMapNum++;
