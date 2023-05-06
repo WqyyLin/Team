@@ -27,7 +27,7 @@ public interface ProjectMapper {
     @Select("SELECT * FROM project WHERE pid=#{pid}")
     Project selectProjectByPid(@Param("pid") Integer pid);
 
-    @Select("SELECT pid WHERE name=#{name} and facility=#{facility} and activity=#{activity} and isLesson=#{isLesson}")
+    @Select("SELECT pid From project WHERE name=#{name} and facility=#{facility} and activity=#{activity} and isLesson=#{isLesson}")
     Integer selectPid(@Param("name") String name, @Param("facility") String facility, @Param("activity")String activity, @Param("isLesson") Integer isLesson);
 
     //查找课程
