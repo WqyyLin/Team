@@ -186,9 +186,9 @@ public class ManagerController {
         return managerService.stopCard(map);
     }
 
-    @PostMapping("order/sent/{rid}")
-    public @ResponseBody Map<String, Object> orderDetail(@PathVariable Integer rid){
-        return managerService.orderDetail(rid);
+    @PostMapping("book/email/{rid}")
+    public @ResponseBody Map<String, Object> orderDetail(@PathVariable Integer rid, @RequestBody Map<String, Object> map){
+        return managerService.orderDetail(rid, map);
     }
 
     @PostMapping("book")
@@ -262,8 +262,8 @@ public class ManagerController {
         Map<String, Object> resultMap = new HashMap<>();
         String facilityName = (String) map.get("sitename");
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime startTime = (LocalDateTime) map.get("startTime");
-        LocalDateTime endTime = (LocalDateTime) map.get("endTime");
+        LocalDateTime startTime = LocalDateTime.parse((String)map.get("starttime"), df) ;
+        LocalDateTime endTime = LocalDateTime.parse((String)map.get("endtime"), df);
         Integer used = serviceHelper.residualNumber(startTime, endTime, facilityName);
         Integer all = facilityMapper.selectCapacity(facilityName);
         if(all > used){

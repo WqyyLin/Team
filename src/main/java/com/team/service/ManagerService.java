@@ -792,14 +792,15 @@ public class ManagerService {
         return resultMap;
     }
 
-    public Map<String, Object> orderDetail(Integer rid) {
+    public Map<String, Object> orderDetail(Integer rid, Map<String, Object> map) {
         Map<String, Object> resultMap = new HashMap<>();
+        String email = (String) map.get("email");
         Rent r = rentMapper.selectRentByRid(rid);
         if (r == null){
             resultMap.put("code", 400);
             resultMap.put("message", "The order is too old and has been deleted!");
         }else{
-            mailService.sendMailForOrder(r, r.getEmail());
+            mailService.sendMailForOrder(r,email);
             resultMap.put("code", 200);
             resultMap.put("message", "Register successfully, please go to the mailbox for account activation!");
         }

@@ -33,7 +33,7 @@ public interface RentMapper {
     @Select("SELECT rid FROM rent WHERE orderNumber=#{orderNumber}")
     Integer getRidByOrder(@Param("orderNumber") String orderNumber);
 
-    @Select("SELECT sum(num) FROM rent WHERE pid=#{pid}")
+    @Select("SELECT sum(num*peopleNum) FROM rent WHERE pid=#{pid}")
     Integer numOfProject(@Param("pid") Integer pid);
 
     @Select("SELECT count(facility) FROM rent where time between #{firstRentTime} and #{LastRentTime}")
