@@ -132,7 +132,7 @@ public class ManagerService {
         //添加新活动
         String activityName = (String) map.get("Activity_name");
         //获取项目编号
-        Integer isLesson = (Integer) map.get("Lesson");
+        Integer isLesson = Integer.parseInt((String) map.get("lesson"));
         if (isAddActivity) {
             if (acticityMapper.selectIsAvailable(activityName, facilityName, isLesson) >= 1) {
                 resultMap.put("code", 401);
@@ -166,7 +166,7 @@ public class ManagerService {
         project.setFacility(facilityName);
         project.setIsLesson(isLesson);
         //项目价格
-        Integer price = (Integer) map.get("Price");
+        Integer price = Integer.parseInt((String) map.get("Price"));
         project.setMoney(price);
         //是否为周期性项目
         int isWeekly;
@@ -201,7 +201,7 @@ public class ManagerService {
         project.setDescription(description);
         List<Integer> weekTime = (List<Integer>) map.get("Weekly_Time");
         //项目预留容量
-        Integer capacity = (Integer) map.get("Reserve_place");
+        Integer capacity = Integer.parseInt((String) map.get("Reserve_place"));
         //当前设施所有项目
         List<Map<String, Object>> projects = projectMapper.selectAllProjectOfOneFacility(facilityName);
         //可使用容量

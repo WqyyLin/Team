@@ -282,7 +282,7 @@ public class ManagerController {
         String facilityName = (String) map.get("sitename");
         String activityName = (String) map.get("activity");
         String name = (String) map.get("name");
-        Integer isLesson = Integer.parseInt((String) map.get("lesson");
+        Integer isLesson = Integer.parseInt((String) map.get("lesson"));
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime startTime = LocalDateTime.parse((String) map.get("startTime"), df);
         LocalDateTime endTime = LocalDateTime.parse((String) map.get("endTime"), df);
@@ -297,7 +297,7 @@ public class ManagerController {
             resultMap = userService.bookActivity(map, null);
         }else{
             target.put("num", Integer.parseInt((String) map.get("total_course")));
-            target.put("people", Integer.parseInt((String) map.get("total_people"));
+            target.put("people", Integer.parseInt((String) map.get("total_people")));
             resultMap = userService.bookLesson(map, null);
         }
         return resultMap;
