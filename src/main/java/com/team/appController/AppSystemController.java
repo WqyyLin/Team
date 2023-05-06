@@ -204,5 +204,22 @@ public class AppSystemController {
         resultMap.put("project", project);
         return resultMap;
     }
+
+    @GetMapping("user/book/activity")
+    public @ResponseBody Map<String, Object> allProjects(){
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("code", 200);
+        resultMap.put("project", projectMapper.selectAllProjects());
+        return resultMap;
+    }
+
+    @GetMapping("user/book/lesson")
+    public @ResponseBody Map<String, Object> allLessons(){
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("code", 200);
+        resultMap.put("lesson", projectMapper.selectAllLessons());
+        return resultMap;
+    }
+
 }
 
