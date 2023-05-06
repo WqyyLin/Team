@@ -282,7 +282,9 @@ public class ManagerService {
             String week = weekDay.toString();
             project.setWeekDay(week);
         }
-        acticityMapper.insertActivity(newActivity);
+        if (newActivity != null){
+            acticityMapper.insertActivity(newActivity);
+        }
         projectMapper.insertProject(project);
         resultMap.put("code", 200);
         resultMap.put("message", "Add successfully");
