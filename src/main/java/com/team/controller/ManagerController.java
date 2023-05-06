@@ -333,12 +333,28 @@ public class ManagerController {
         LocalTime startTimeOfFacility = facility.getStartTime();
         LocalTime endTimeOfFacility = facility.getEndTime();
         List<LocalTime> timeList = new ArrayList<>();
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now().plusDays(1);
+        LocalDate end = now.plusDays(3);
+        List<Map<String, Object>> mapList = new ArrayList<>();
         while (startTimeOfFacility.isBefore(endTimeOfFacility)){
             timeList.add(startTimeOfFacility);
             startTimeOfFacility = startTimeOfFacility.plusHours(1);
         }
-    return resultMap;
+        while (now.isBefore(end)){
+            for (LocalTime time: timeList){
+                LocalDateTime startTime = LocalDateTime.of(now, time);
+                LocalDateTime endTime = startTime.plusHours(duration);
+                Integer used = serviceHelper.residualNumber(startTime, endTime, facilityName);
+                if (used + capacity <= totalCapacity){
+                    Map<String, Object> t = new HashMap<>();
+                    t.put("startTime", startTime);
+                    t.put("endTime", endTime);
+                    mapList.add(t);
+                }
+            }
+            now = now.plusDays(1);
+        }
+        return resultMap;
     }
 
 }
