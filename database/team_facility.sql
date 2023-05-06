@@ -33,7 +33,7 @@ CREATE TABLE `facility` (
   `startTime` time NOT NULL,
   `endTime` time NOT NULL,
   PRIMARY KEY (`fid`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `facility` (
 
 LOCK TABLES `facility` WRITE;
 /*!40000 ALTER TABLE `facility` DISABLE KEYS */;
-INSERT INTO `facility` VALUES (1,'Swimming pool',32,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(2,'Fitness room',25,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(3,'Squash courts',4,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(4,'Squash courts',4,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(5,'Squash courts',4,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(6,'Squash courts',4,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(7,'Sports hall',20,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(31,'table tennis',2,'You can learn many thing from us at table tennis, at the same time you can relax yourself and make you become a healthier person!','Normal Stand table tennis',1,'9999-12-03 00:00:00','09:00:00','21:00:00'),(32,'table tennis',2,'You can learn many thing from us at table tennis, at the same time you can relax yourself and make you become a healthier person!','Normal Stand table tennis',1,'9999-12-03 00:00:00','09:00:00','21:00:00');
+INSERT INTO `facility` VALUES (1,'Swimming pool',32,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(2,'Fitness room',25,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(3,'Squash courts',4,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(4,'Squash courts',4,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(5,'Squash courts',4,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(6,'Squash courts',4,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(7,'Sports hall',20,'description','title',1,'9999-12-31 00:00:00','09:00:00','21:00:00'),(31,'table tennis',2,'You can learn many thing from us at table tennis, at the same time you can relax yourself and make you become a healthier person!','Normal Stand table tennis',1,'9999-12-03 00:00:00','09:00:00','21:00:00'),(32,'table tennis',2,'You can learn many thing from us at table tennis, at the same time you can relax yourself and make you become a healthier person!','Normal Stand table tennis',1,'9999-12-03 00:00:00','09:00:00','21:00:00'),(33,'table',2,'You can learn many thing from us at table tennis, at the same time you can relax yourself and make you become a healthier person!','Normal Stand table tennis',1,'9999-12-03 00:00:00','09:00:00','21:00:00'),(34,'table',2,'You can learn many thing from us at table tennis, at the same time you can relax yourself and make you become a healthier person!','Normal Stand table tennis',1,'9999-12-03 00:00:00','09:00:00','21:00:00');
 /*!40000 ALTER TABLE `facility` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-06  1:56:17
+-- Dump completed on 2023-05-06 22:30:02

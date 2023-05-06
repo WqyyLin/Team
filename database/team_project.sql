@@ -36,6 +36,7 @@ CREATE TABLE `project` (
   `isLesson` tinyint NOT NULL DEFAULT '1',
   `picture` blob,
   `activity` varchar(255) NOT NULL,
+  `valid` int DEFAULT '1',
   PRIMARY KEY (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -46,7 +47,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (18,'we','Swimming pool',33,'9999-12-31 11:37:23','9999-12-31 12:37:23','ef',1,'1,2,5,',23,1,NULL,'General'),(19,'we','Swimming pool',33,'9999-11-30 11:37:23','9999-12-31 11:37:23','ef',0,'1,2,3,',23,0,NULL,'General use'),(20,'we','Fitness room',33,'9999-12-31 11:37:23','9999-12-31 12:37:23','ef',0,'1,2,3,',23,1,NULL,'General use');
+INSERT INTO `project` VALUES (18,'we','Swimming pool',33,'9999-12-31 11:37:23','9999-12-31 12:37:23','ef',1,'1,2,5,',23,1,NULL,'General',1),(19,'we','Swimming pool',33,'9999-11-30 11:37:23','9999-12-31 11:37:23','ef',0,'1,2,3,',23,0,NULL,'General use',1),(20,'we','Fitness room',33,'9999-12-31 11:37:23','9999-12-31 12:37:23','ef',0,'1,2,3,',23,1,NULL,'General use',1);
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -59,4 +60,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-06  1:56:17
+-- Dump completed on 2023-05-06 22:30:02

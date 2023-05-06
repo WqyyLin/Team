@@ -30,7 +30,7 @@ CREATE TABLE `activity` (
   `isLesson` int NOT NULL DEFAULT '0',
   `description` varchar(3600) DEFAULT NULL,
   PRIMARY KEY (`aid`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `activity` (
 
 LOCK TABLES `activity` WRITE;
 /*!40000 ALTER TABLE `activity` DISABLE KEYS */;
-INSERT INTO `activity` VALUES (1,'Lane swimming','Swimming pool',10,0,'description'),(2,'Lessons','Swimming pool',10,1,'description'),(3,'Team events','Swimming pool',10,0,'description'),(4,'General use','Swimming pool',10,0,'description'),(5,'General use','Fitness room',10,0,'description'),(6,'1-hour sessions','Squash courts',10,0,'description'),(7,'Team events','Squash courts',10,0,'description'),(8,'1-hour sessions','Sports hall',10,0,'description'),(38,'One-person ticket','table tennis',0,0,NULL),(39,'play with coach','table tennis',0,0,NULL);
+INSERT INTO `activity` VALUES (1,'Lane swimming','Swimming pool',10,0,'description'),(2,'Lessons','Swimming pool',10,1,'description'),(3,'Team events','Swimming pool',10,0,'description'),(4,'General use','Swimming pool',10,0,'description'),(5,'General use','Fitness room',10,0,'description'),(6,'1-hour sessions','Squash courts',10,0,'description'),(7,'Team events','Squash courts',10,0,'description'),(8,'1-hour sessions','Sports hall',10,0,'description'),(38,'One-person ticket','table tennis',0,0,NULL),(39,'play with coach','table tennis',0,0,NULL),(40,'One-person ticket','table',0,0,NULL),(41,'play with coach','table',0,1,NULL);
 /*!40000 ALTER TABLE `activity` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-06  1:56:17
+-- Dump completed on 2023-05-06 22:30:02
