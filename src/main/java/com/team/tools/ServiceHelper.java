@@ -83,7 +83,7 @@ public class ServiceHelper {
         int i = 30-day;
         while(i <= 29){
             if(money.get(i-1) == 0){
-                increase.add((double) 0);
+                increase.add((double) 100);
                 i++;
                 continue;
             }

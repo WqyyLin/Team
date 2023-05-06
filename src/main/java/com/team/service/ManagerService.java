@@ -92,13 +92,14 @@ public class ManagerService {
             }
             resultMap.put("thirtyMoney", sum);
             //今日营业额
-            Double newMoney = money.get(29);
+            Double newMoney =  money.get(29);
             Double oldMoney = money.get(28);
             resultMap.put("todayMoney", newMoney);
             if (oldMoney == 0){
                 resultMap.put("rentPeopleRate", 100);
             }else{
-                resultMap.put("rentPeopleRate", (Integer) (newMoney*100/oldMoney));
+                Double rate = newMoney*100/oldMoney;
+                resultMap.put("rentPeopleRate", rate.intValue());
             }
             //七日增长率
             resultMap.put("increase", serviceHelper.getIncrease(money, 7));
