@@ -527,9 +527,11 @@ public class ManagerController {
             }
             if (!startTimeList.isEmpty()){
                 use.put("name", (String) project.get("name"));
+                use.put("activity", project.get("activity"));
                 use.put("starttime", startTimeList);
                 use.put("endtime", endTimeList);
             }
+            mapList.add(use);
         }
         resultMap.put("all", mapList);
         return resultMap;
