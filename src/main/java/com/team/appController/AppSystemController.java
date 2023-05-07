@@ -114,7 +114,7 @@ public class AppSystemController {
             if (!new File("/", "picture").exists()){
                 new File("/", "picture").mkdirs();
             }
-            File file1 = new File("../picture/" + user.getId()+".png");
+            File file1 = new File("/picture/" + user.getId()+".png");
             System.out.println(file1.getAbsolutePath());
             for (MultipartFile file: files){
                 try{
@@ -210,7 +210,7 @@ public class AppSystemController {
     public @ResponseBody Map<String, Object> allProjects(){
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("code", 200);
-        resultMap.put("project", projectMapper.selectAllProjects());
+        resultMap.put("project", projectMapper.select());
         return resultMap;
     }
 

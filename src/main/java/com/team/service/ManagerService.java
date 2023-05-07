@@ -936,6 +936,8 @@ public class ManagerService {
             lessons.add(project);
         }
         resultMap.put("lesson_show", lessons);
+        List<Activity> activities = acticityMapper.selectAll();
+        resultMap.put("activities", activities);
         return resultMap;
     }
 }

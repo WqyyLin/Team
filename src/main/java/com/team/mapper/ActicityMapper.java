@@ -14,6 +14,9 @@ public interface ActicityMapper {
     @Select("SELECT * FROM activity WHERE facility = #{facility}")
     List<Map<String, Object>> selectActivitiesByFacility(@Param("facility") String facility);
 
+    @Select("SELECT * FROM activity")
+    List<Activity> selectAll();
+
     @Select("SELECT count(name) FROM activity where name=#{name} and facility=#{facility} and isLesson=#{isLesson}")
     Integer selectIsAvailable(@Param("name") String name, @Param("facility") String facility, @Param("isLesson") Integer isLesson);
 

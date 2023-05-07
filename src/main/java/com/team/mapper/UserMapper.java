@@ -12,7 +12,7 @@ public interface UserMapper {
     /**
      * 新增账号
      */
-    @Insert("INSERT INTO user ( email, password, salt, activation_time, is_valid, confirm_code, name, type, membership, money, headPicture) " +
+    @Insert("INSERT INTO user ( email, password, salt, activation_time, is_valid, confirm_code, name, type, membership, money, picture) " +
             " VALUES ( #{email}, #{password}, #{salt}, #{activationTime}, #{isValid}, #{confirmCode}, #{name}, #{type}, 0, 0, #{picture})")
     Integer insertUser(User user);
 
@@ -43,7 +43,7 @@ public interface UserMapper {
     @Update("UPDATE user SET is_valid = 1 WHERE confirm_code = #{confirmCode}")
     Integer updateUserByConfirmCode(@Param("confirmCode") String confirmCode);
 
-    @Update("UPDATE user SET headPicture = #{headPicture} WHERE email = #{email} AND is_valid = 1")
+    @Update("UPDATE user SET picture = #{headPicture} WHERE email = #{email} AND is_valid = 1")
     Integer updateUserHeadPhoto(@Param("headPicture") String headPicture, @Param("email") String email);
 
     /**
