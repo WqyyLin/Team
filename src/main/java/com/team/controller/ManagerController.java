@@ -1,7 +1,5 @@
 package com.team.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.team.entity.Activity;
 import com.team.entity.Facility;
 import com.team.entity.Project;
 import com.team.entity.User;
@@ -10,12 +8,10 @@ import com.team.service.MailService;
 import com.team.service.ManagerService;
 import com.team.service.UserService;
 import com.team.tools.ServiceHelper;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -395,6 +391,89 @@ public class ManagerController {
         }
         resultMap.put("code",200);
         resultMap.put("message","Change Successfully");
+        return resultMap;
+    }
+
+    @PostMapping("allTime")
+    public @ResponseBody Map<String, Object> allTime(@RequestBody Map<String, Object> map){
+        Map<String, Object> resultMap = new HashMap<>();
+        String start = (String) map.get("starttime");
+        String end = (String) map.get("endtime");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startTime = LocalDateTime.parse(start, df);
+        LocalDateTime endTime = LocalDateTime.parse(end, df);
+        List<Map<String, Object>> facilities = facilityMapper.selectAllFacility();
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        for (Map<String, Object> facility: facilities){
+            String facilityName = (String) facility.get("name");
+            LocalDateTime facilityStart = LocalDateTime.of(startTime.toLocalDate(), ((Time) facility.get("startTime")).toLocalTime());
+            LocalDateTime facilityEnd = LocalDateTime.of(startTime.toLocalDate(), ((Time) facility.get("endTime")).toLocalTime());
+            if (!(startTime.isAfter(facilityEnd) || endTime.isBefore(facilityStart))){
+                Map<String, Object> use = new HashMap<>();
+                use.put("name", facilityName);
+                DateTimeFormatter df2 = DateTimeFormatter.ofPattern("HH:mm:ss");
+                if (startTime.isEqual(facilityStart)){
+                    use.put("starttime", df2.format(startTime));
+                }else if (startTime.isBefore(facilityStart)){
+                    use.put("starttime", df2.format(startTime));
+                }else {
+                    use.put("starttime", df2.format(facilityStart));
+                }
+                if (endTime.isEqual(facilityEnd)){
+                    use.put("endtime", df2.format(endTime));
+                }else if (endTime.isBefore(facilityEnd)){
+                    use.put("endtime", df2.format(endTime));
+                }else {
+                    use.put("endtime", df2.format(facilityEnd));
+                }
+                mapList.add(use);
+            }
+        }
+        resultMap.put("all", mapList);
+        return resultMap;
+    }
+
+    @PostMapping("facilityTime")
+    public @ResponseBody Map<String, Object> facilityTime(@RequestBody Map<String, Object> map){
+        Map<String, Object> resultMap = new HashMap<>();
+        String facility = (String) map.get("facility");
+        String start = (String) map.get("starttime");
+        String end = (String) map.get("endtime");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startTime = LocalDateTime.parse(start, df);
+        LocalDateTime endTime = LocalDateTime.parse(end, df);
+        List<Map<String, Object>> projects = projectMapper.selectAll();
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        for (Map<String, Object> project: projects){
+            Integer isLesson = (Integer) project.get("isLesson");
+//            List<String> startTimeList = new ArrayList<>();
+//            List<String> endTimeList
+            if (isLesson == 0){
+                LocalDateTime projectStart = LocalDateTime.of(startTime.toLocalDate(), ((LocalDateTime) project.get("startTime")).toLocalTime());
+                LocalDateTime projectEnd = LocalDateTime.of(startTime.toLocalDate(), ((LocalDateTime) project.get("endTime")).toLocalTime());
+                if (!(startTime.isAfter(projectEnd) || endTime.isBefore(projectStart))){
+                    Map<String, Object> use = new HashMap<>();
+                    use.put("name", projectEnd);
+                    DateTimeFormatter df2 = DateTimeFormatter.ofPattern("HH:mm:ss");
+                    if (startTime.isEqual(projectStart)){
+                        use.put("starttime", df2.format(startTime));
+                    }else if (startTime.isBefore(projectStart)){
+                        use.put("starttime", df2.format(startTime));
+                    }else {
+                        use.put("starttime", df2.format(projectStart));
+                    }
+                    if (endTime.isEqual(projectEnd)){
+                        use.put("endtime", df2.format(endTime));
+                    }else if (endTime.isBefore(projectEnd)){
+                        use.put("endtime", df2.format(endTime));
+                    }else {
+                        use.put("endtime", df2.format(projectEnd));
+                    }
+                    mapList.add(use);
+                }
+            }
+        }
+        resultMap.put("all", mapList);
         return resultMap;
     }
 
