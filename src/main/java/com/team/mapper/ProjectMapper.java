@@ -22,6 +22,10 @@ public interface ProjectMapper {
     @Select("SELECT count(name) FROM project where name=#{name} and facility=#{facility} and activity=#{activity}")
     Integer selectIsAvailable(@Param("name") String name, @Param("facility") String facility, @Param("activity")String activity);
 
+    @Select("SELECT count(*) FROM project WHERE find_in_set(#{day}, dayOfWeek) And pid=#{pid}")
+    Integer validLesson(@Param("day") String day, @Param("pid") Integer pid);
+
+
     @Select("SELECT * FROM project WHERE pid=#{pid} and valid=1")
     Project selectProjectByPid(@Param("pid") Integer pid);
 

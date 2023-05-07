@@ -414,7 +414,7 @@ public class ManagerController {
                 DateTimeFormatter df2 = DateTimeFormatter.ofPattern("HH:mm:ss");
                 if (startTime.isEqual(facilityStart)){
                     use.put("starttime", df2.format(startTime));
-                }else if (startTime.isBefore(facilityStart)){
+                }else if (startTime.isAfter(facilityStart)){
                     use.put("starttime", df2.format(startTime));
                 }else {
                     use.put("starttime", df2.format(facilityStart));
@@ -446,31 +446,89 @@ public class ManagerController {
         List<Map<String, Object>> mapList = new ArrayList<>();
         for (Map<String, Object> project: projects){
             Integer isLesson = (Integer) project.get("isLesson");
-//            List<String> startTimeList = new ArrayList<>();
-//            List<String> endTimeList
+            List<String> startTimeList = new ArrayList<>();
+            List<String> endTimeList = new ArrayList<>();
+            Map<String, Object> use = new HashMap<>();
             if (isLesson == 0){
                 LocalDateTime projectStart = LocalDateTime.of(startTime.toLocalDate(), ((LocalDateTime) project.get("startTime")).toLocalTime());
                 LocalDateTime projectEnd = LocalDateTime.of(startTime.toLocalDate(), ((LocalDateTime) project.get("endTime")).toLocalTime());
                 if (!(startTime.isAfter(projectEnd) || endTime.isBefore(projectStart))){
-                    Map<String, Object> use = new HashMap<>();
-                    use.put("name", projectEnd);
                     DateTimeFormatter df2 = DateTimeFormatter.ofPattern("HH:mm:ss");
                     if (startTime.isEqual(projectStart)){
-                        use.put("starttime", df2.format(startTime));
-                    }else if (startTime.isBefore(projectStart)){
-                        use.put("starttime", df2.format(startTime));
+                        startTimeList.add(df2.format(startTime));
+                    }else if (startTime.isAfter(projectStart)){
+                        startTimeList.add(df2.format(startTime));
                     }else {
-                        use.put("starttime", df2.format(projectStart));
+                        startTimeList.add(df2.format(projectStart));
                     }
                     if (endTime.isEqual(projectEnd)){
-                        use.put("endtime", df2.format(endTime));
+                        endTimeList.add(df2.format(endTime));
                     }else if (endTime.isBefore(projectEnd)){
-                        use.put("endtime", df2.format(endTime));
+                        endTimeList.add(df2.format(endTime));
                     }else {
-                        use.put("endtime", df2.format(projectEnd));
+                        endTimeList.add(df2.format(projectEnd));
                     }
-                    mapList.add(use);
                 }
+            }else {
+                Integer isWeekly = (Integer) project.get("isWeekly");
+                if (isLesson == 1 && isWeekly == 1){
+                    String day = startTime.getDayOfWeek().toString();
+                    switch (day) {
+                        case "MONDAY" -> day = "1";
+                        case "TUESDAY" -> day = "2";
+                        case "WEDNESDAY" -> day = "3";
+                        case "THURSDAY" -> day = "4";
+                        case "FRIDAY" -> day = "5";
+                        case "SATURDAY" -> day = "6";
+                        case "SUNDAY" -> day = "7";
+                    }
+                    if (projectMapper.validLesson(day, (Integer) project.get("pid")) > 0){
+                        LocalDateTime projectStart = LocalDateTime.of(startTime.toLocalDate(), ((LocalDateTime) project.get("startTime")).toLocalTime());
+                        LocalDateTime projectEnd = LocalDateTime.of(startTime.toLocalDate(), ((LocalDateTime) project.get("endTime")).toLocalTime());
+                        if (!(startTime.isAfter(projectEnd) || endTime.isBefore(projectStart))){
+                            DateTimeFormatter df2 = DateTimeFormatter.ofPattern("HH:mm:ss");
+                            if (startTime.isEqual(projectStart)){
+                                startTimeList.add(df2.format(startTime));
+                            }else if (startTime.isAfter(projectStart)){
+                                startTimeList.add(df2.format(startTime));
+                            }else {
+                                startTimeList.add(df2.format(projectStart));
+                            }
+                            if (endTime.isEqual(projectEnd)){
+                                endTimeList.add(df2.format(endTime));
+                            }else if (endTime.isBefore(projectEnd)){
+                                endTimeList.add(df2.format(endTime));
+                            }else {
+                                endTimeList.add(df2.format(projectEnd));
+                            }
+                        }
+                    }
+                }else{
+                    LocalDateTime projectStart = (LocalDateTime) project.get("startTime");
+                    LocalDateTime projectEnd = (LocalDateTime) project.get("endTime");
+                    if (!(startTime.isAfter(projectEnd) || endTime.isBefore(projectStart))){
+                        DateTimeFormatter df2 = DateTimeFormatter.ofPattern("HH:mm:ss");
+                        if (startTime.isEqual(projectStart)){
+                            startTimeList.add(df2.format(startTime));
+                        }else if (startTime.isAfter(projectStart)){
+                            startTimeList.add(df2.format(startTime));
+                        }else {
+                            startTimeList.add(df2.format(projectStart));
+                        }
+                        if (endTime.isEqual(projectEnd)){
+                            endTimeList.add(df2.format(endTime));
+                        }else if (endTime.isBefore(projectEnd)){
+                            endTimeList.add(df2.format(endTime));
+                        }else {
+                            endTimeList.add(df2.format(projectEnd));
+                        }
+                    }
+                }
+            }
+            if (!startTimeList.isEmpty()){
+                use.put("name", (String) project.get("name"));
+                use.put("starttime", startTimeList);
+                use.put("endtime", endTimeList);
             }
         }
         resultMap.put("all", mapList);

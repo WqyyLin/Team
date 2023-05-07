@@ -188,7 +188,7 @@
       <workItem from="1683299745390" duration="10673000" />
       <workItem from="1683336944847" duration="38359000" />
       <workItem from="1683400305500" duration="297000" />
-      <workItem from="1683425092706" duration="3891000" />
+      <workItem from="1683425092706" duration="5332000" />
     </task>
     <servers />
   </component>
@@ -218,11 +218,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/team/appController/AppSystemController.java</url>
           <line>202</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/team/controller/ManagerController.java</url>
-          <line>412</line>
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
