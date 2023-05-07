@@ -1,5 +1,6 @@
 package com.team.controller;
 
+import com.team.entity.Activity;
 import com.team.entity.Facility;
 import com.team.entity.Project;
 import com.team.entity.User;
@@ -588,6 +589,18 @@ public class ManagerController {
         Files.write(filePath, picture.getBytes());
         facility.setPicture(directory + "facility" + filename);
         facilityMapper.setPicture(facility);
+    }
+
+    @PostMapping("picture/activity/{aid}")
+    public void activityPicture(@RequestParam("file") MultipartFile picture, @PathVariable Integer aid) throws IOException {
+        Activity activity = acticityMapper.selectActivityByAid(aid);
+        String filename = activity.getName()+".png";
+        String directory = "./";
+        Path filePath = Paths.get(directory, filename);
+        Files.createDirectories(filePath.getParent());
+        Files.write(filePath, picture.getBytes());
+        activity.setPicture(directory + "facility" + filename);
+        acticityMapper.setPicture(activity);
     }
 
 }

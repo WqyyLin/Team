@@ -381,6 +381,7 @@ public class UserService {
             }
             int discount=10;
             if (user != null){
+                userMoney = user.getMoney();
                 for (Integer cid: cardMapper.selectCidById(user.getId())){
                     Integer now = cardMapper.getDiscount(cid);
                     if(discount > now){

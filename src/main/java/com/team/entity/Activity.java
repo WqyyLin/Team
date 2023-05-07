@@ -15,5 +15,6 @@ public class Activity {
     private Integer isLesson;
     private Integer money;
     private String description;
+    private String picture;
 
 }

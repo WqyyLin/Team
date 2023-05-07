@@ -1,6 +1,7 @@
 package com.team.mapper;
 
 import com.team.entity.Activity;
+import com.team.entity.Facility;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -16,6 +17,9 @@ public interface ActicityMapper {
 
     @Select("SELECT * FROM activity")
     List<Activity> selectAll();
+
+    @Update("UPDATE team.activity SET picture=#{picture} WHERE aid=#{aid}")
+    void setPicture(Activity activity);
 
     @Select("SELECT count(name) FROM activity where name=#{name} and facility=#{facility} and isLesson=#{isLesson}")
     Integer selectIsAvailable(@Param("name") String name, @Param("facility") String facility, @Param("isLesson") Integer isLesson);
