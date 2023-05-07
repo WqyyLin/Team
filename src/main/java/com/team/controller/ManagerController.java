@@ -9,8 +9,15 @@ import com.team.service.ManagerService;
 import com.team.service.UserService;
 import com.team.tools.ServiceHelper;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -534,6 +541,37 @@ public class ManagerController {
             }
         }
         resultMap.put("all", mapList);
+        return resultMap;
+    }
+
+    @PutMapping("facilityPhoto/{email}")
+    public @ResponseBody Map<String, Object> facilityPicture(HttpServletRequest request, @PathVariable String email) throws IOException {
+        Map<String, Object> resultMap = new HashMap<>();
+        User user = userMapper.selectOneUserByEmail(email);
+        if (user == null){
+            resultMap.put("code", 400);
+            resultMap.put("message", "Please log in first");
+            System.out.println(111111);
+        }else{
+            List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+            if (!new File("/", "picture").exists()){
+                new File("/", "picture").mkdirs();
+            }
+            File file1 = new File("../picture/" + user.getId()+".png");
+            System.out.println(file1.getAbsolutePath());
+            for (MultipartFile file: files){
+                try{
+                    byte [] bytes = file.getBytes();
+                    OutputStream out = new FileOutputStream(file1);
+                    out.write(bytes);
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            userMapper.updateUserHeadPhoto("/picture/"+user.getId()+"png", user.getEmail());
+            resultMap.put("code", 200);
+            resultMap.put("message", "Upload successfully!");
+        }
         return resultMap;
     }
 

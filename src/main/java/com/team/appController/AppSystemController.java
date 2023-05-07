@@ -128,6 +128,7 @@ public class AppSystemController {
             userMapper.updateUserHeadPhoto("/picture/"+user.getId()+"png", user.getEmail());
             resultMap.put("code", 200);
             resultMap.put("message", "Upload successfully!");
+            resultMap.put("picture", "/picture/"+user.getId()+"png");
         }
         return resultMap;
     }
