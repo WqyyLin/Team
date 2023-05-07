@@ -370,6 +370,9 @@ public class UserService {
         Integer money = num*oneMoney;
         Integer allCapacity = project.getCapacity();
         Integer usedCapacity = rentMapper.numOfProject(pid);
+        if (usedCapacity == null){
+            usedCapacity = 0;
+        }
         Integer userMoney = null;
         if(allCapacity > usedCapacity){
             User user = userMapper.selectOneUserByEmail(email);
