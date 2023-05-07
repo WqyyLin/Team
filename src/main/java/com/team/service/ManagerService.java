@@ -68,19 +68,27 @@ public class ManagerService {
             Integer newPeople = serviceHelper.oneDayNewPeopleNumber(time);
             Integer oldPeople = serviceHelper.oneDayNewPeopleNumber(time.minusDays(1));
             resultMap.put("newPeople", newPeople);
-            if (oldPeople == 0){
-                resultMap.put("newPeopleRate", 100);
+            if (oldPeople == 0 && newPeople != 0){
+                resultMap.put("newPeopleRate", "+∞");
+            }else if(oldPeople != 0 && newPeople == 0){
+                resultMap.put("newPeopleRate", "-∞");
+            }else if(oldPeople == 0 && newPeople ==0){
+                resultMap.put("newPeopleRate", 0);
             }else{
-                resultMap.put("newPeopleRate", (Integer) (newPeople*100/oldPeople));
+                resultMap.put("newPeopleRate", ((newPeople-oldPeople)*100/oldPeople));
             }
             //今日预约人数
             Integer newRent = serviceHelper.oneDayRentPeople(time);
             Integer oldRent = serviceHelper.oneDayRentPeople(time.minusDays(1));
             resultMap.put("rentPeople", newRent);
-            if (oldRent == 0){
-                resultMap.put("rentPeopleRate", 100);
+            if (oldRent == 0 && newRent != 0){
+                resultMap.put("rentPeopleRate", "+∞");
+            }else if(oldRent != 0 && newRent == 0){
+                resultMap.put("rentPeopleRate", "-∞");
+            }else if(oldRent == 0 && newRent ==0){
+                resultMap.put("rentPeopleRate", 0);
             }else{
-                resultMap.put("rentPeopleRate", (Integer) (newRent*100/oldRent));
+                resultMap.put("rentPeopleRate", ((newRent-oldRent)*100/oldRent));
             }
             //30天营业额
             List<Double> money = serviceHelper.getMoney(time, 30);
@@ -95,14 +103,17 @@ public class ManagerService {
             Double newMoney =  money.get(29);
             Double oldMoney = money.get(28);
             resultMap.put("todayMoney", newMoney);
-            if (oldMoney == 0){
-                resultMap.put("rentPeopleRate", 100);
+            if (oldMoney == 0 && newMoney != 0){
+                resultMap.put("rentMoneyRate", "+∞");
+            }else if(oldMoney != 0 && newMoney == 0){
+                resultMap.put("rentMoneyRate", "-∞");
+            }else if(oldMoney == 0 && newMoney ==0){
+                resultMap.put("rentMoneyRate", 0);
             }else{
-                Double rate = newMoney*100/oldMoney;
-                resultMap.put("rentPeopleRate", rate.intValue());
+                resultMap.put("rentMoneyRate", ((newRent-oldMoney)*100/oldMoney));
             }
             //七日增长率
-            resultMap.put("increase", serviceHelper.getIncrease(money, 7));
+//            resultMap.put("increase", serviceHelper.getIncrease(money, 7));
             //当日满场率
             Integer totalRent = 0;
             Integer totalCapacity = 0;

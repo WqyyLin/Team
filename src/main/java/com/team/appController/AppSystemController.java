@@ -196,7 +196,7 @@ public class AppSystemController {
         return resultMap;
     }
 
-    @GetMapping("lessons/{pid}")
+    @GetMapping("lessonInfo/{pid}")
     public @ResponseBody Map<String, Object> getLessonInfo(@PathVariable Integer pid){
         Map<String, Object> resultMap = new HashMap<>();
         Project project = projectMapper.selectProjectByPid(pid);
