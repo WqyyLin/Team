@@ -24,5 +24,6 @@ public class User implements Serializable {
     private Byte isValid; //是否可用
     private Integer money;
     private Integer type;
+    private String picture;
 
 }

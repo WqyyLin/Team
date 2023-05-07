@@ -111,8 +111,8 @@ public class AppSystemController {
             System.out.println(111111);
         }else{
             List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-            if (!new File("../", "picture").exists()){
-                new File("../", "picture").mkdirs();
+            if (!new File("/", "picture").exists()){
+                new File("/", "picture").mkdirs();
             }
             File file1 = new File("../picture/" + user.getId()+".png");
             System.out.println(file1.getAbsolutePath());
@@ -125,7 +125,7 @@ public class AppSystemController {
                     e.printStackTrace();
                 }
             }
-            userMapper.updateUserHeadPhoto("../picture/"+user.getId()+"png", user.getEmail());
+            userMapper.updateUserHeadPhoto("/picture/"+user.getId()+"png", user.getEmail());
             resultMap.put("code", 200);
             resultMap.put("message", "Upload successfully!");
         }

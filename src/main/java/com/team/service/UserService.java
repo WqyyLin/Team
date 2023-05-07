@@ -86,6 +86,7 @@ public class UserService {
            }else{
                user.setType(0);
            }
+           user.setPicture("/picture/default.png");
            //新增账号
            int result = userMapper.insertUser(user);
            if (result > 0) {

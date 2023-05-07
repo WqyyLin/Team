@@ -12,8 +12,8 @@ public interface UserMapper {
     /**
      * 新增账号
      */
-    @Insert("INSERT INTO user ( email, password, salt, activation_time, is_valid, confirm_code, name, type, membership, money) " +
-            " VALUES ( #{email}, #{password}, #{salt}, #{activationTime}, #{isValid}, #{confirmCode}, #{name}, #{type}, 0, 0)")
+    @Insert("INSERT INTO user ( email, password, salt, activation_time, is_valid, confirm_code, name, type, membership, money, headPicture) " +
+            " VALUES ( #{email}, #{password}, #{salt}, #{activationTime}, #{isValid}, #{confirmCode}, #{name}, #{type}, 0, 0, #{picture})")
     Integer insertUser(User user);
 
     @Select("SELECT money FROM user WHERE email = #{email} and is_valid = 1")

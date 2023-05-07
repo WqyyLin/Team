@@ -530,8 +530,8 @@ public class ManagerController {
                 use.put("activity", project.get("activity"));
                 use.put("starttime", startTimeList);
                 use.put("endtime", endTimeList);
+                mapList.add(use);
             }
-            mapList.add(use);
         }
         resultMap.put("all", mapList);
         return resultMap;
