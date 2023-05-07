@@ -65,6 +65,9 @@ public interface FacilityMapper {
     @Update("UPDATE team.facility SET isValid = #{isValid} WHERE name = #{name}")
     void stopFacility(Facility facility);
 
+    @Update("UPDATE team.facility SET picture=#{picture} WHERE name = #{name}")
+    void setPicture(Facility facility);
+
     @Update("UPDATE team.facility SET isValid = 1, stopTime = #{stopTime} WHERE isValid = 0 And stopTime < #{time}")
     void restartFacility(@Param("stopTime")LocalDateTime stopTime, @Param("time") LocalDateTime time);
 

@@ -23,4 +23,5 @@ public class Facility {
     private String description;
     private Integer isValid;
     private Integer num;
+    private String picture;
 }

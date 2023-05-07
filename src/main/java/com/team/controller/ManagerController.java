@@ -8,6 +8,7 @@ import com.team.service.MailService;
 import com.team.service.ManagerService;
 import com.team.service.UserService;
 import com.team.tools.ServiceHelper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -18,6 +19,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -572,6 +576,18 @@ public class ManagerController {
             resultMap.put("message", "Upload successfully!");
         }
         return resultMap;
+    }
+
+    @PostMapping("picture/facility/{name}")
+    public void facilityPicture(@RequestParam("file") MultipartFile picture, @PathVariable String name) throws IOException {
+        Facility facility = facilityMapper.selectAllFacilityOfOneName(name).get(0);
+        String filename = facility.getName()+".png";
+        String directory = "./";
+        Path filePath = Paths.get(directory, filename);
+        Files.createDirectories(filePath.getParent());
+        Files.write(filePath, picture.getBytes());
+        facility.setPicture(directory + "facility" + filename);
+        facilityMapper.setPicture(facility);
     }
 
 }
