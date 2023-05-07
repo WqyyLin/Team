@@ -42,8 +42,8 @@ public interface ProjectMapper {
     @Select("SELECT * FROM project where isLesson=1")
     List<Map<String, Object>> selectLessons();
 
-    @Select("SELECT * FROM project where isLesson=0 and valid=1")
-    List<Map<String, Object>> selectAllProjects();
+    @Select("SELECT * FROM project where isLesson=1 and email=#{email}")
+    List<Map<String, Object>> selectLessonOrder(@Param("email") String email);
 
     @Select("SELECT * FROM project where isLesson=0 or isLesson=2")
     List<Map<String, Object>> selectProjects();

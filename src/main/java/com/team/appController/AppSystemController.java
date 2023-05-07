@@ -222,5 +222,13 @@ public class AppSystemController {
         return resultMap;
     }
 
+    @GetMapping("order/lesson/{email}")
+    public @ResponseBody Map<String, Object> lessonOrder(@PathVariable String email){
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("code", 200);
+        resultMap.put("lesson", projectMapper.selectLessonOrder(email));
+        return resultMap;
+    }
+
 }
 

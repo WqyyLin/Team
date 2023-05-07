@@ -603,4 +603,5 @@ public class ManagerController {
         acticityMapper.setPicture(activity);
     }
 
+
 }
