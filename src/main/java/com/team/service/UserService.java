@@ -84,7 +84,7 @@ public class UserService {
             user.setConfirmCode(confirmCode);
             user.setActivationTime(ldt);
             user.setIsValid((byte) 0);
-            if (map.get("key").equals("123456")) {
+            if (map.get("key")!=null && map.get("key").equals("123456")) {
                 user.setType(1);
             } else {
                 user.setType(0);
