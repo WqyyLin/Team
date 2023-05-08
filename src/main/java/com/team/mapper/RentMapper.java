@@ -36,6 +36,8 @@ public interface RentMapper {
     @Select("SELECT * FROM rent where isLesson=1 and email=#{email}")
     List<Map<String, Object>> selectLessonOrder(@Param("email") String email);
 
+    @Select("SELECT * FROM rent where used=0 and valid=1 and email=#{email}")
+    List<Rent> selectValidOrder(@Param("email") String email);
 
     @Select("SELECT sum(num*peopleNum) FROM rent WHERE pid=#{pid}")
     Integer numOfProject(@Param("pid") Integer pid);

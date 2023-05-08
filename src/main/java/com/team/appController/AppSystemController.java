@@ -22,7 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Time;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -227,6 +229,41 @@ public class AppSystemController {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("code", 200);
         resultMap.put("lesson", rentMapper.selectLessonOrder(email));
+        return resultMap;
+    }
+
+    @GetMapping("calendar/{email}")
+    public @ResponseBody Map<String, Object> calendarInfo(@PathVariable String email){
+        Map<String, Object> resultMap = new HashMap<>();
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        List<Map<String, Object>> all = new ArrayList<>();
+        List<Rent> rents = rentMapper.selectValidOrder(email);
+        for (Rent rent: rents){
+            Map<String, Object> one = new HashMap<>();
+            LocalDateTime startTime = rent.getTime();
+            one.put("date", df.format(startTime));
+            if (Duration.between(now, startTime).toDays() >= 1){
+                one.put("type", "success");
+            }else if(Duration.between(now, startTime).toMinutes() <= 30){
+                one.put("type", "error");
+            }else {
+                one.put("type", "warning");
+            }
+            Project project = projectMapper.selectProjectByPid(rent.getPid());
+            one.put("content", project.getName());
+            if (rent.getIsLesson() == 1){
+                one.put("name", "Lesson");
+            }else if (rent.getIsLesson() == 0){
+                one.put("name", "Activity");
+            }else{
+                one.put("name", "Special");
+            }
+            one.put("orderNumber", rent.getOrderNumber());
+            all.add(one);
+        }
+        resultMap.put("code", 200);
+        resultMap.put("all", all);
         return resultMap;
     }
 
