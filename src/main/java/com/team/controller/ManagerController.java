@@ -303,17 +303,17 @@ public class ManagerController {
         Integer pid = projectMapper.selectPid(name, facilityName, activityName, isLesson);
         Map<String, Object> target = new HashMap<>();
         target.put("pid", pid);
+        String email = (String) map.get("email");
         if (isLesson == 0){
             target.put("startTime", df.format(startTime));
             target.put("duration", duration);
             target.put("num", Integer.parseInt((String) map.get("total_people")));
-            resultMap = userService.bookActivity(target, null);
+            resultMap = userService.bookActivity(target, email);
         }else{
             target.put("num", Integer.parseInt((String) map.get("total_course")));
             target.put("people", Integer.parseInt((String) map.get("total_people")));
-            resultMap = userService.bookLesson(target, null);
+            resultMap = userService.bookLesson(target, email);
         }
-        String email = (String) map.get("email");
         if (email!=null){
             mailService.sendMailForOrder(rentMapper.selectRentByRid(rentMapper.getRidByOrder((String) resultMap.get("orderNumber"))), email);
         }
@@ -549,35 +549,7 @@ public class ManagerController {
         return resultMap;
     }
 
-    @PutMapping("facilityPhoto/{email}")
-    public @ResponseBody Map<String, Object> facilityPicture(HttpServletRequest request, @PathVariable String email) throws IOException {
-        Map<String, Object> resultMap = new HashMap<>();
-        User user = userMapper.selectOneUserByEmail(email);
-        if (user == null){
-            resultMap.put("code", 400);
-            resultMap.put("message", "Please log in first");
-        }else{
-            List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-            if (!new File("/", "picture").exists()){
-                new File("/", "picture").mkdirs();
-            }
-            File file1 = new File("/picture/" + user.getId()+".png");
-            System.out.println(file1.getAbsolutePath());
-            for (MultipartFile file: files){
-                try{
-                    byte [] bytes = file.getBytes();
-                    OutputStream out = new FileOutputStream(file1);
-                    out.write(bytes);
-                }catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            userMapper.updateUserHeadPhoto("/picture/"+user.getId()+".png", user.getEmail());
-            resultMap.put("code", 200);
-            resultMap.put("message", "Upload successfully!");
-        }
-        return resultMap;
-    }
+
 
     @PostMapping("picture/facility/{name}")
     public void facilityPicture(@RequestParam("file") MultipartFile picture, @PathVariable String name) throws IOException {
