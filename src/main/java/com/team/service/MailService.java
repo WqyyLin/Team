@@ -1,9 +1,6 @@
 package com.team.service;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BarcodeQRCode;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.team.entity.Rent;
@@ -17,7 +14,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -65,9 +61,8 @@ public class MailService {
         // 创建邮件对象
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         File fileName = new File("./picture/"+rent.getOrderNumber()+ ".pdf");
-            DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        if (!fileName.exists()){
-        if (fileName.exists()){
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        if (!fileName.exists()){
             try (OutputStream file = new FileOutputStream(fileName)) {
                 Rectangle pageSize = new Rectangle(560f, 360f);
                 Document document = new Document(pageSize, 36f, 36f, 72f, 72f);
@@ -83,55 +78,50 @@ public class MailService {
                 document.add(paragraph);
                 Paragraph user = new Paragraph();
                 user.setSpacingBefore(10);
-                user.add("Reserved user:\t" + rent.getEmail());
+                user.add("                                         Reserved user:     " + rent.getEmail());
                 document.add(user);
                 Paragraph order = new Paragraph();
                 order.setSpacingBefore(10);
-                order.add("Order number:\t" + rent.getNum());
+                order.add("                                         Order number:      " + rent.getNum());
                 document.add(order);
-                Paragraph rentTime = new Paragraph();
-                rentTime.setSpacingBefore(10);
-                rentTime.add("Appointment time:" + df.format(rent.getRentTime()));
-                document.add(rentTime);
                 Paragraph price = new Paragraph();
                 price.setSpacingBefore(10);
-                price.add("Reservation price:\t" + rent.getMoney());
+                price.add("                                         Reservation price: " + rent.getMoney());
+                Paragraph rentTime = new Paragraph();
+                rentTime.setSpacingBefore(10);
+                rentTime.add("                                         Appointment time:  " + df.format(rent.getRentTime()));
+                document.add(rentTime);
                 document.add(price);
-                BarcodeQRCode barcodeQRCode = new BarcodeQRCode("http://localhost:8080/app/user/code/"+"", 32, 32, null);
-                document.add(barcodeQRCode.getImage());
+                BarcodeQRCode barcodeQRCode = new BarcodeQRCode("http://localhost:8080/app/user/code/"+rent.getOrderNumber(), 96, 96, null);
+                Image img = barcodeQRCode.getImage();
+                img.setAbsolutePosition(100,230);
+                document.add(img);
                 // 关闭document
                 document.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-//        try {
-//            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
-//            message.addAttachment("order.pdf", fileName);
-//            // 设置邮件主题
-//            message.setSubject("Order");
-//            // 设置邮件发送者
-//            message.setFrom(mailUsername);
-//            // 设置邮件接收者，可以多个
-//            message.setTo(email);
-//            // 设置邮件抄送人，可以多个
-//            // message.setCc();
-//            // 设置隐秘抄送人， 可以多个
-//            // message.setBcc();
-//            // 设置邮件发送日期
-//            message.setSentDate(new Date());
-//            String text = "Reserved user:" + rent.getEmail() + "\n" +
-//                    "Reservation number:" + rent.getNum() + "\n" +
-//                    "Facility:" + rent.getFacility() + "\n" +
-//                    "Reservation price:" + rent.getMoney() + "\n" +
-//                    "Appointment time:" + df.format(rent.getRentTime() )+ "\n" +
-//                    "order:" + rent.getOrderNumber() + "\n";
-//            // 设置邮件正文
-//            message.setText(text, false);
-//        } catch (MessagingException e) {
-//            e.printStackTrace();
-//        }
-//        javaMailSender.send(mimeMessage);
+        try {
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
+            message.addAttachment("order.pdf", fileName);
+            // 设置邮件主题
+            message.setSubject("Order");
+            // 设置邮件发送者
+            message.setFrom(mailUsername);
+            // 设置邮件接收者，可以多个
+            message.setTo(email);
+            // 设置邮件抄送人，可以多个
+            // message.setCc();
+            // 设置隐秘抄送人， 可以多个
+            // message.setBcc();
+            // 设置邮件发送日期
+            message.setSentDate(new Date());
+            message.setText("");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        javaMailSender.send(mimeMessage);
     }
 
 }
