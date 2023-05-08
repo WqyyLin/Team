@@ -1,10 +1,9 @@
 package com.team.appController;
 
+import com.team.entity.Rent;
 import com.team.entity.User;
-import com.team.mapper.ActicityMapper;
-import com.team.mapper.FacilityMapper;
-import com.team.mapper.ProjectMapper;
-import com.team.mapper.UserMapper;
+import com.team.mapper.*;
+import com.team.service.MailService;
 import com.team.service.RentService;
 import com.team.service.UserService;
 import org.apache.ibatis.annotations.Delete;
@@ -33,6 +32,10 @@ public class AppUserController {
 
     @Resource
     private UserService userService;
+    @Resource
+    private RentMapper rentMapper;
+    @Resource
+    private MailService mailService;
     @Resource
     private UserMapper userMapper;
 
@@ -93,6 +96,24 @@ public class AppUserController {
     @DeleteMapping("order/{rid}")
     public @ResponseBody Map<String, Object> deleteOrder(@PathVariable Integer rid){
         return userService.deleteOrder(rid);
+    }
+
+    @PostMapping("order/email")
+    public @ResponseBody Map<String, Object> orderDetail(@RequestBody Map<String, Object> map) {
+        Map<String, Object> resultMap = new HashMap<>();
+        String email = (String) map.get("email");
+        Integer rid = (Integer) map.get("rid");
+//        Rent r = rentMapper.selectRentByRid(rid);
+        Rent r = rentMapper.selectAll().get(0);
+        if (r == null){
+            resultMap.put("code", 400);
+            resultMap.put("message", "The order is too old and has been deleted!");
+        }else{
+            mailService.sendMailForOrder(r,email);
+            resultMap.put("code", 200);
+            resultMap.put("message", "Register successfully, please go to the mailbox for account activation!");
+        }
+        return resultMap;
     }
 
 }
