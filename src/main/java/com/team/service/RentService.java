@@ -112,14 +112,6 @@ public class RentService {
         }
     }
 
-    public void stopRentRestart(){
-        //得到当前时间
-        LocalDateTime timeNow = LocalDateTime.now();
-        //得到目标
-        LocalDateTime timeTarget = LocalDateTime.of(LocalDate.MAX.withYear(9999),LocalTime.MIN);
-        facilityMapper.restartFacility(timeTarget, timeNow);
-    }
-
     public void clearExpiredMember() {
         //得到当前时间
         LocalDateTime timeNow = LocalDateTime.now();

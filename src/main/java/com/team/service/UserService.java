@@ -10,6 +10,7 @@ import com.team.entity.User;
 import com.team.mapper.*;
 import com.team.tools.ServiceHelper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,56 +58,56 @@ public class UserService {
     public Map<String, Object> createAccount(Map<String, Object> map) {
         Map<String, Object> resultMap = new HashMap<>();
         String userEmail = (String) map.get("email");
-        if (userEmail.equals(email)){
+        if (userEmail.equals(email)) {
             resultMap.put("code", 405);
             resultMap.put("message", "The user has registered!");
             return resultMap;
         }
         //根据邮箱查询用户
-       List<User> userList = userMapper.selectUserByEmail(userEmail);
-       User user = new User();
-       if (userList == null || userList.isEmpty()) {
-           // 雪花算法生成确认码
-           String confirmCode = IdUtil.getSnowflake(1, 1).nextIdStr();
-           // 盐
-           String salt = RandomUtil.randomString(6);
-           // 加密密码: 原始密码 + 盐
-           String md5Pwd = SecureUtil.md5((String) map.get("password") + salt);
-           // 激活生效时间
-           LocalDateTime ldt = LocalDateTime.now().plusDays(1);
-           // 初始化账号信息
-           user.setName((String) map.get("name"));
-           user.setEmail(userEmail);
-           user.setPassword((String) map.get("password"));
-           user.setSalt(salt);
-           user.setPassword(md5Pwd);
-           user.setConfirmCode(confirmCode);
-           user.setActivationTime(ldt);
-           user.setIsValid((byte) 0);
-           if(((String) map.get("key")).equals("123456")){
+        List<User> userList = userMapper.selectUserByEmail(userEmail);
+        User user = new User();
+        if (userList == null || userList.isEmpty()) {
+            // 雪花算法生成确认码
+            String confirmCode = IdUtil.getSnowflake(1, 1).nextIdStr();
+            // 盐
+            String salt = RandomUtil.randomString(6);
+            // 加密密码: 原始密码 + 盐
+            String md5Pwd = SecureUtil.md5(map.get("password") + salt);
+            // 激活生效时间
+            LocalDateTime ldt = LocalDateTime.now().plusDays(1);
+            // 初始化账号信息
+            user.setName((String) map.get("name"));
+            user.setEmail(userEmail);
+            user.setPassword((String) map.get("password"));
+            user.setSalt(salt);
+            user.setPassword(md5Pwd);
+            user.setConfirmCode(confirmCode);
+            user.setActivationTime(ldt);
+            user.setIsValid((byte) 0);
+            if (map.get("key").equals("123456")) {
                 user.setType(1);
-           }else{
-               user.setType(0);
-           }
-           user.setPicture("/picture/default.png");
-           //新增账号
-           int result = userMapper.insertUser(user);
-           if (result > 0) {
-               //发送邮件
-               String activationUrl = "http://localhost:8080/user/activation?confirmCode="+confirmCode;
-               mailService.sendMailForActivationAccount(activationUrl, user.getEmail());
-               resultMap.put("code", 200);
-               resultMap.put("message", "Register successfully, please go to the mailbox for account activation!");
-               resultMap.put("confirmCode", confirmCode);
-           } else {
-               resultMap.put("code", 400);
-               resultMap.put("message", "Registration failed!");
-           }
-       }else{
-           resultMap.put("code", 400);
-           resultMap.put("message", "The user has registered!");
-       }
-       return resultMap;
+            } else {
+                user.setType(0);
+            }
+            user.setPicture("/picture/default.png");
+            //新增账号
+            int result = userMapper.insertUser(user);
+            if (result > 0) {
+                //发送邮件
+                String activationUrl = "http://localhost:8080/user/activation?confirmCode=" + confirmCode;
+                mailService.sendMailForActivationAccount(activationUrl, user.getEmail());
+                resultMap.put("code", 200);
+                resultMap.put("message", "Register successfully, please go to the mailbox for account activation!");
+                resultMap.put("confirmCode", confirmCode);
+            } else {
+                resultMap.put("code", 400);
+                resultMap.put("message", "Registration failed!");
+            }
+        } else {
+            resultMap.put("code", 400);
+            resultMap.put("message", "The user has registered!");
+        }
+        return resultMap;
     }
 
     /**
@@ -141,14 +144,14 @@ public class UserService {
         }
     }
 
-    public Map<String, Object> logoutAccount(String status){
+    public Map<String, Object> logoutAccount(String status) {
         Map<String, Object> resultMap = new HashMap<>();
-        if (status.equals("login") || status.equals("manager") || status.equals("staff")){
+        if (status.equals("login") || status.equals("manager") || status.equals("staff")) {
             //登出成功
             resultMap.put("code", 200);
             resultMap.put("message", "Successfully log out!");
             resultMap.put("status", "Logout");
-        }else {
+        } else {
             //登出失败
             resultMap.put("code", 400);
             resultMap.put("message", "Something Failure!");
@@ -158,6 +161,7 @@ public class UserService {
 
     /**
      * 激活账号
+     *
      * @param confirmCode
      * @return
      */
@@ -166,7 +170,7 @@ public class UserService {
         Map<String, Object> resultMap = new HashMap<>();
         //根据确认码查询用户
         User user = userMapper.selectUserByConfirmCode(confirmCode);
-        if (user == null){
+        if (user == null) {
             resultMap.put("code", 400);
             resultMap.put("message", "Code error!");
             return resultMap;
@@ -176,22 +180,22 @@ public class UserService {
         if (userList == null || userList.isEmpty()) {
             //判断激活时间是否超时
             boolean after = LocalDateTime.now().isAfter(user.getActivationTime());
-            if(after){
+            if (after) {
                 resultMap.put("code", 400);
                 resultMap.put("message", "The link has failed, please register again!");
                 return resultMap;
             }
             //根据确认码查询用户并修改状态值为1（可用）
             int result = userMapper.updateUserByConfirmCode(confirmCode);
-            if (result > 0){
+            if (result > 0) {
                 resultMap.put("code", 200);
                 resultMap.put("message", "Active!");
-            }else{
+            } else {
                 resultMap.put("code", 400);
                 resultMap.put("message", "Activation fails!");
             }
             userMapper.deleteRepeatUser(user.getEmail());
-        }else{
+        } else {
             resultMap.put("code", 400);
             resultMap.put("message", "The user has registered!");
         }
@@ -205,12 +209,12 @@ public class UserService {
         //获取项目类型
         Integer type = (Integer) map.get("lesson");
         //获取项目名称
-        String projectName =(String) map.get("name");
+        String projectName = (String) map.get("name");
         //获取时间
         String time = (String) map.get("time");
         //获取订课数量
         Integer lessonNumber;
-        if(type == 1){
+        if (type == 1) {
             lessonNumber = (Integer) map.get("total_course");
         }
         //获取人头
@@ -224,18 +228,18 @@ public class UserService {
     public Map<String, Object> chargeMoney(Map<String, Object> map, String email) {
         Map<String, Object> resultMap = new HashMap<>();
         User user = userMapper.selectOneUserByEmail(email);
-        if(user == null){
+        if (user == null) {
             resultMap.put("code", 401);
             resultMap.put("message", "Please log in first!");
-        }else{
+        } else {
             Integer money = (Integer) map.get("money");
-            if(money <= 0){
+            if (money <= 0) {
                 resultMap.put("code", 400);
                 resultMap.put("message", "Incorrect top-up amount!");
-            }else{
+            } else {
                 resultMap.put("code", 200);
                 resultMap.put("message", "Charge successfully");
-                userMapper.updateUserMoney(userMapper.selectUserMoneyByEmail(user.getEmail())+money, user.getEmail());
+                userMapper.updateUserMoney(userMapper.selectUserMoneyByEmail(user.getEmail()) + money, user.getEmail());
             }
         }
         return resultMap;
@@ -247,26 +251,26 @@ public class UserService {
         User u = userMapper.selectOneUserByEmail(email);
         Integer money = u.getMoney();
         Card card = cardMapper.selectCardByCid(cid);
-        if(card.getValid() == 0){
+        if (card.getValid() == 0) {
             resultMap.put("code", 401);
             resultMap.put("message", "Wrong Card!");
             return resultMap;
         }
-        if(card.getMoney()>money){
+        if (card.getMoney() > money) {
             resultMap.put("code", 400);
             resultMap.put("message", "The balance is insufficient, please recharge first!");
             return resultMap;
         }
-        if(cardMapper.selectCardNumOfUser(cid, u.getId()) > 0){
+        if (cardMapper.selectCardNumOfUser(cid, u.getId()) > 0) {
             LocalDateTime time = cardMapper.selectCardTimeOfUser(cid, u.getId());
             LocalDateTime endTime = time.plusDays(card.getTime());
             cardMapper.updateUserCard(cid, u.getId(), endTime);
-            userMapper.updateUserMember(money-card.getMoney(), email);
+            userMapper.updateUserMember(money - card.getMoney(), email);
             resultMap.put("message", "Successful renewal");
-        }else{
+        } else {
             LocalDateTime endTime = LocalDateTime.now().withMinute(0).withSecond(0).plusDays(card.getTime()).plusHours(1);
             cardMapper.insertCardOfUser(cid, u.getId(), endTime);
-            userMapper.updateUserMember(money-card.getMoney(), email);
+            userMapper.updateUserMember(money - card.getMoney(), email);
             resultMap.put("message", "Successful purchase");
         }
         resultMap.put("code", 200);
@@ -286,7 +290,7 @@ public class UserService {
         //购买票数
         Integer num = (Integer) map.get("num");
         //总价
-        Integer money = duration*num*oneMoney;
+        Integer money = duration * num * oneMoney;
         //设施容量
         Integer capacity = facilityMapper.selectCapacity(facility);
         //设置时区
@@ -296,7 +300,7 @@ public class UserService {
         //项目结束时间
         LocalDateTime endTime;
         //获取时间
-        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             startTime = LocalDateTime.ofInstant(formatter.parse((String) map.get("startTime")).toInstant(), zoneId);
             endTime = startTime.plusHours(duration);
@@ -305,23 +309,23 @@ public class UserService {
         }
         Integer usedCapacity = serviceHelper.residualNumber(startTime, endTime, facility);
         Integer userMoney = null;
-        if (capacity >= (usedCapacity+num)){
+        if (capacity >= (usedCapacity + num)) {
             User user = userMapper.selectOneUserByEmail(email);
             if (email == null) {
                 user = null;
             }
-            int discount=10;
-            if (user != null){
+            int discount = 10;
+            if (user != null) {
                 userMoney = user.getMoney();
-                for (Integer cid: cardMapper.selectCidById(user.getId())){
+                for (Integer cid : cardMapper.selectCidById(user.getId())) {
                     Integer now = cardMapper.getDiscount(cid);
-                    if(discount > now){
+                    if (discount > now) {
                         discount = now;
                     }
                 }
             }
-            money = money*discount/10;
-            if(user==null || userMoney >= money){
+            money = money * discount / 10;
+            if (user == null || userMoney >= money) {
                 Rent r = new Rent();
                 LocalDateTime now = LocalDateTime.now();
                 r.setRentTime(now);
@@ -334,23 +338,23 @@ public class UserService {
                 r.setPid(pid);
                 r.setFacility(facility);
                 r.setPeopleNum(1);
-                String orderNumber =  pid.toString() + money  + num+
-                        now.getYear() + now.getMonth() + now.getDayOfMonth() + now.getHour() + now.getMinute()+
+                String orderNumber = pid.toString() + money + num +
+                        now.getYear() + now.getMonth() + now.getDayOfMonth() + now.getHour() + now.getMinute() +
                         now.getSecond();
                 r.setOrderNumber(orderNumber);
                 rentMapper.insertRent(r);
-                if (user != null){
-                    userMapper.updateUserMoney(userMoney-money, email);
+                if (user != null) {
+                    userMapper.updateUserMoney(userMoney - money, email);
                 }
                 resultMap.put("code", 200);
                 resultMap.put("money", money);
                 resultMap.put("message", "Successful appointment!");
                 resultMap.put("orderNumber", r.getOrderNumber());
-            }else{
+            } else {
                 resultMap.put("code", 401);
                 resultMap.put("message", "Balance is insufficient, please recharge it first!");
             }
-        }else{
+        } else {
             resultMap.put("code", 400);
             resultMap.put("message", "The capacity of the facility has been exceeded!");
         }
@@ -360,91 +364,131 @@ public class UserService {
     public Map<String, Object> bookLesson(Map<String, Object> map, String email) {
         Map<String, Object> resultMap = new HashMap<>();
         Integer pid = (Integer) map.get("pid");
-        Project project = projectMapper.selectProjectByPid(pid);
-        String facility = project.getFacility();
-        LocalDateTime startTime = LocalDateTime.of(LocalDate.now(), project.getStartTime().toLocalTime());
-        LocalDateTime endTime = LocalDateTime.of(LocalDate.now(), project.getEndTime().toLocalTime());
-        Integer isLesson = project.getIsLesson();
-        Integer oneMoney = project.getMoney();
+        Map<String, Object> project = projectMapper.selectProjectMapByPid(pid);
+        String facility = (String) project.get("facility");
+        LocalDateTime startTime = LocalDateTime.of(LocalDate.now().plusDays(1), ((LocalDateTime) project.get("startTime")).toLocalTime());
+        LocalDateTime endTime = LocalDateTime.of(LocalDate.now().plusDays(7), ((LocalDateTime) project.get("endTime")).toLocalTime());
+        Integer isLesson = (Integer) project.get("isLesson");
+        Integer oneMoney = (Integer) project.get("money");
         Integer num = (Integer) map.get("num");
-        Integer money = num*oneMoney;
-        Integer allCapacity = project.getCapacity();
-        Integer usedCapacity = rentMapper.numOfProject(pid);
-        if (usedCapacity == null){
-            usedCapacity = 0;
+        Integer people = (Integer) map.get("people");
+        if (people == null) {
+            people = 1;
+        }
+        Integer money = people * num * oneMoney;
+        Integer allCapacity = (Integer) project.get("capacity");
+        if (people > allCapacity) {
+            resultMap.put("code", 402);
+            resultMap.put("message", "The limit is exceeded, please select again!");
+            return resultMap;
         }
         Integer userMoney = null;
-        if(allCapacity > usedCapacity){
-            User user = userMapper.selectOneUserByEmail(email);
-            if (email == null){
-                user = null;
+        User user = userMapper.selectOneUserByEmail(email);
+        if (email == null) {
+            user = null;
+        }
+        int discount = 10;
+        if (user != null) {
+            userMoney = user.getMoney();
+            for (Integer cid : cardMapper.selectCidById(user.getId())) {
+                Integer now = cardMapper.getDiscount(cid);
+                if (discount > now) {
+                    discount = now;
+                }
             }
-            int discount=10;
-            if (user != null){
-                userMoney = user.getMoney();
-                for (Integer cid: cardMapper.selectCidById(user.getId())){
-                    Integer now = cardMapper.getDiscount(cid);
-                    if(discount > now){
-                        discount = now;
+        }
+        money = money * discount / 10;
+        if (user == null || userMoney >= money) {
+            if (user != null) {
+                userMapper.updateUserMoney(userMoney - money, email);
+            }
+        } else {
+            resultMap.put("code", 401);
+            resultMap.put("message", "Balance is insufficient, please recharge it first!");
+            return resultMap;
+        }
+        String[] days = ((String) project.get("dayOfWeek")).split(",");
+        for (String day : days) {
+            switch (day) {
+                case "1" -> day = "MONDAY";
+                case "2" -> day = "TUESDAY";
+                case "3" -> day = "WEDNESDAY";
+                case "4" -> day = "THURSDAY";
+                case "5" -> day = "FRIDAY";
+                case "6" -> day = "SATURDAY";
+                case "7" -> day = "SUNDAY";
+            }
+        }
+        List<LocalDateTime> validTimes = new ArrayList<>();
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd,");
+        while (startTime.isBefore(endTime)) {
+            for (String day : days) {
+                if (startTime.getDayOfWeek().toString().equals(day)) {
+                    Integer usedCapacity = rentMapper.numOfProject(pid, df.format(startTime));
+                    if (usedCapacity == null) {
+                        usedCapacity = 0;
+                    }
+                    if (people + usedCapacity <= allCapacity) {
+                        validTimes.add(startTime);
                     }
                 }
             }
-            money = money*discount/10;
-            if(user==null || userMoney >= money){
-                if (user!=null){
-                    userMapper.updateUserMoney(userMoney-money, email);
-                }
-                Rent r = new Rent();
-                LocalDateTime now = LocalDateTime.now();
-                r.setRentTime(now);
-                r.setMoney(money);
-                r.setTime(startTime);
-                r.setIsLesson(isLesson);
-                r.setEmail(email);
-                r.setLimitTime(endTime);
-                r.setNum(num);
-                r.setPid(pid);
-                r.setFacility(facility);
-                r.setPeopleNum((Integer) map.get("people"));
-                String orderNumber =  pid.toString() + money + num+
-                        now.getYear() + now.getMonth() + now.getDayOfMonth() + now.getHour() + now.getMinute()+
-                        now.getSecond();
-                r.setOrderNumber(orderNumber);
-                rentMapper.insertRent(r);
-                resultMap.put("code", 200);
-                resultMap.put("money", money);
-                resultMap.put("message", "Successful appointment!");
-                resultMap.put("orderNumber", r.getOrderNumber());
-            }else{
-                resultMap.put("code", 401);
-                resultMap.put("message", "Balance is insufficient, please recharge it first!");
-            }
-        }else {
-            resultMap.put("code", 400);
-            resultMap.put("message", "The capacity of the lesson has been exceeded!");
+            startTime = startTime.plusDays(1);
         }
+        if (validTimes.size() != num) {
+            resultMap.put("code", 403);
+            resultMap.put("message", "There are no more " + num + " classes available in the next seven days");
+            return resultMap;
+        }
+        String validTime = "";
+        for (LocalDateTime time : validTimes) {
+            validTime += df.format(time);
+        }
+        Rent r = new Rent();
+        LocalDateTime now = LocalDateTime.now();
+        r.setRentTime(now);
+        r.setMoney(money);
+        r.setTime(startTime);
+        r.setIsLesson(isLesson);
+        r.setEmail(email);
+        r.setLimitTime(endTime);
+        r.setNum(num);
+        r.setPid(pid);
+        r.setFacility(facility);
+        r.setPeopleNum(people);
+        String orderNumber = pid.toString() + money + num +
+                now.getYear() + now.getMonth() + now.getDayOfMonth() + now.getHour() + now.getMinute() +
+                now.getSecond();
+        r.setOrderNumber(orderNumber);
+        rentMapper.insertRent(r);
+        Integer rid = rentMapper.getRidByOrder(orderNumber);
+        rentMapper.updateValidTime(validTime, rid);
+        resultMap.put("code", 200);
+        resultMap.put("money", money);
+        resultMap.put("message", "Successful appointment!");
+        resultMap.put("orderNumber", r.getOrderNumber());
         return resultMap;
     }
 
     public Map<String, Object> getOrder(String orderNumber) {
         Map<String, Object> resultMap = new HashMap<>();
         Integer rid = rentMapper.getRidByOrder(orderNumber);
-        if (rid == null){
+        if (rid == null) {
             resultMap.put("code", 400);
             resultMap.put("message", "The order does not exist!");
-        }else{
+        } else {
             Rent r = rentMapper.selectRentByRid(rid);
-            if (r.getIsLesson() == 1){
-                if (projectMapper.selectProjectByPid(r.getPid()).getIsWeekly() == 1){
-                    if(r.getNum() == 1){
+            if (r.getIsLesson() == 1) {
+                if (projectMapper.selectProjectByPid(r.getPid()).getIsWeekly() == 1) {
+                    if (r.getNum() == 1) {
                         rentMapper.updateBookStatus(orderNumber);
-                    }else{
-                        rentMapper.updateLessonNum(r.getNum()-1, orderNumber);
+                    } else {
+                        rentMapper.updateLessonNum(r.getNum() - 1, orderNumber);
                     }
-                }else{
+                } else {
                     rentMapper.updateBookStatus(orderNumber);
                 }
-            }else{
+            } else {
                 rentMapper.updateBookStatus(orderNumber);
             }
             resultMap.put("code", 200);
@@ -457,13 +501,13 @@ public class UserService {
         Map<String, Object> resultMap = new HashMap<>();
         Rent r = rentMapper.selectRentByRid(rid);
         LocalDateTime now = LocalDateTime.now();
-        if (now.isAfter(r.getTime().plusHours(2))){
+        if (now.isAfter(r.getTime().plusHours(2))) {
             resultMap.put("code", 400);
             resultMap.put("message", "It exceeds the refundable time!");
-        }else{
+        } else {
             Integer money = r.getMoney();
             User u = userMapper.selectOneUserByEmail(r.getEmail());
-            userMapper.updateUserMoney(u.getMoney()+money, u.getEmail());
+            userMapper.updateUserMoney(u.getMoney() + money, u.getEmail());
             rentMapper.updateDeleteOrder(r.getRid());
             resultMap.put("code", 200);
             resultMap.put("message", "Cancel successfully!");

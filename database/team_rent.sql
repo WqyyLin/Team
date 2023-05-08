@@ -37,6 +37,7 @@ CREATE TABLE `rent` (
   `used` int NOT NULL DEFAULT '0',
   `valid` int NOT NULL DEFAULT '1',
   `peopleNum` int NOT NULL DEFAULT '1',
+  `validTime` varchar(3600) DEFAULT NULL,
   PRIMARY KEY (`rid`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -59,4 +60,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-08  1:20:52
+-- Dump completed on 2023-05-08 21:26:15

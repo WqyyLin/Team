@@ -18,6 +18,9 @@ public interface RentMapper {
     @Select("SELECT * From rent WHERE rid=#{rid}")
     Rent selectRentByRid(@Param("rid") Integer rid);
 
+    @Update("UPDATE rent SET validTime=#{validTime} WHERE rid=#{rid}")
+    void updateValidTime(@Param("validTime") String validTime, @Param("rid") Integer rid);
+
     @Update("UPDATE rent SET used=1, valid=0 WHERE rid=#{rid}")
     void updateDeleteOrder(@Param("rid") Integer rid);
 
@@ -39,8 +42,8 @@ public interface RentMapper {
     @Select("SELECT * FROM rent where used=0 and valid=1 and email=#{email}")
     List<Rent> selectValidOrder(@Param("email") String email);
 
-    @Select("SELECT sum(num*peopleNum) FROM rent WHERE pid=#{pid}")
-    Integer numOfProject(@Param("pid") Integer pid);
+    @Select("SELECT sum(num*peopleNum) FROM rent WHERE pid=#{pid} and find_in_set(#{startTime}, validTime))")
+    Integer numOfProject(@Param("pid") Integer pid, @Param("startTime") String startTime);
 
     @Select("SELECT count(num * peopleNum) FROM rent where time between #{firstRentTime} and #{LastRentTime} and facility=#{facility}")
     Integer selectTotalUsedFacilityNumber(@Param("firstRentTime") LocalDateTime firstRentTime, @Param("LastRentTime") LocalDateTime LastRentTime, @Param("facility") String facility);

@@ -24,5 +24,6 @@ public class Rent {
     private Integer used;
     private String orderNumber;
     private Integer peopleNum;
+    private String validTime;
 
 }

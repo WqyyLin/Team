@@ -24,11 +24,6 @@ public class DatabaseTask {
 
     //每小时执行一次
     @Scheduled(cron = "0 0 * * * ?")
-    private void stopRentRestart(){
-        rentService.stopRentRestart();
-    }
-
-    @Scheduled(cron = "0 0 * * * ?")
     private void clearExpiredMember(){
         rentService.clearExpiredMember();
     }

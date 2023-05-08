@@ -29,6 +29,10 @@ public interface ProjectMapper {
     @Select("SELECT * FROM project WHERE pid=#{pid} and valid=1")
     Project selectProjectByPid(@Param("pid") Integer pid);
 
+    @Select("SELECT * FROM project WHERE pid=#{pid} and valid=1")
+    Map<String, Object> selectProjectMapByPid(@Param("pid") Integer pid);
+
+
     @Select("SELECT * FROM project WHERE pid=#{pid}")
     Project selectByPid(@Param("pid") Integer pid);
 
